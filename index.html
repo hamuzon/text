@@ -181,14 +181,14 @@
   </main>
 
   <footer id="footer">
-    <div>©️2025年 Text enlargement app</div>
-  <div>
-    使用ライブラリー:
-    <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
-    <a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>,
-    <a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">Vanilla JavaScript</a>,
-    <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
-  </div>
+    <div id="footer-author">©️2025年 Text enlargement app</div>
+    <div>
+      使用ライブラリー:
+      <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
+      <a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>,
+      <a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">Vanilla JavaScript</a>,
+      <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
+    </div>
   </footer>
 
   <script>
@@ -270,6 +270,18 @@
 
     updateDisplay();
     updateStyles();
+
+    // --- 追加部分: 動的なフッター表示 ---
+    const footerAuthor = document.getElementById("footer-author");
+    const hostname = window.location.hostname;
+
+    if (hostname.includes("hamuzon.github.io")) {
+      footerAuthor.innerHTML = '©️2025年 <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>';
+    } else if (hostname.includes("hamusata.f5.si")) {
+      footerAuthor.innerHTML = '©️2025年 <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>';
+    } else {
+      footerAuthor.textContent = '©️2025年 Text enlargement app';
+    }
   </script>
 </body>
 </html>
