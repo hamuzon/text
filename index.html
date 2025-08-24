@@ -6,7 +6,7 @@
   <title>Text enlargement app</title>
   <meta name="description" content="Text拡大appですいれたText拡大表示します" />
   <link rel="icon" href="icon-light.png" type="image/png" />
-  <link href="https://fonts.googleapis.com/css2?family=Potta+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
   <style>
     :root {
       --color-primary: #00793d;
@@ -19,7 +19,7 @@
     }
     body {
       margin: 0;
-      font-family: 'Potta One', cursive;
+      font-family: 'Noto Serif JP', serif;
       background-color: var(--color-background);
       color: var(--color-on-background);
       min-height: 100vh;
@@ -78,7 +78,7 @@
       user-select: text;
       border: 2px solid var(--color-primary);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      font-family: 'Potta One', cursive;
+      font-family: 'Noto Serif JP', serif;
     }
     #settings {
       display: flex;
@@ -111,7 +111,7 @@
       color: var(--color-secondary);
       padding: 1rem 0 2rem 0;
       user-select: text;
-      font-family: 'Potta One', cursive;
+      font-family: 'Noto Serif JP', serif;
     }
     footer#footer a {
       color: var(--color-primary);
@@ -155,7 +155,7 @@
           <label for="fontSelector">フォント選択</label>
           <select id="fontSelector">
             <option value="'Potta One', cursive">Potta One</option>
-            <option value="'Noto Serif JP', serif">Noto Serif JP</option>
+            <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
             <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
             <option value="Arial, sans-serif">Arial</option>
             <option value="Verdana, sans-serif">Verdana</option>
@@ -244,4 +244,3 @@
   </script>
 </body>
 </html>
-
