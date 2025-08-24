@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Text Enlarger App</title>
-  <meta name="description" content="入力したテキストを大きく表示するアプリ" />
+  <title>Text enlargement app</title>
+  <meta name="description" content="Text拡大appですいれたText拡大表示します" />
   <link rel="icon" href="icon-light.png" type="image/png" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Sawarabi+Mincho&family=Potta+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Potta+One&display=swap" rel="stylesheet" />
   <style>
     :root {
       --color-primary: #00793d;
@@ -17,17 +17,20 @@
       --color-on-background: #1a1c19;
       --shape-corner-medium: 12px;
     }
+
     body {
       margin: 0;
-      font-family: 'Sawarabi Mincho', 'Noto Serif JP', serif;
+      font-family: 'Potta One', cursive;
       background-color: var(--color-background);
       color: var(--color-on-background);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
     header {
       background-color: var(--color-primary);
+      color: var(--header-text-color);
       padding: 1.2rem 2rem;
       font-weight: 700;
       font-size: 2.2rem;
@@ -36,8 +39,9 @@
       user-select: none;
       transition: color 0.3s ease;
     }
+
     main {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto 2rem auto;
       padding: 0 1rem;
       flex-grow: 1;
@@ -46,10 +50,11 @@
       gap: 2rem;
       min-width: 320px;
     }
+
     textarea#textInput {
       width: 100%;
       min-height: 120px;
-      font-size: 28px;
+      font-size: 40px;
       font-family: inherit;
       padding: 0.8rem 1rem;
       border-radius: var(--shape-corner-medium);
@@ -60,6 +65,7 @@
       background-color: var(--color-background);
       transition: border-color 0.3s ease;
     }
+
     #displayArea {
       width: 100%;
       min-height: 180px;
@@ -67,7 +73,7 @@
       font-size: var(--font-size, 120px);
       line-height: var(--line-height, 1.4);
       color: #000000;
-      padding: 1rem;
+      padding: 0.6rem 0;
       border-radius: var(--shape-corner-medium);
       background-color: var(--color-background);
       box-shadow: 0 0 12px var(--color-primary);
@@ -77,6 +83,7 @@
       border: 2px solid var(--color-primary);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
     #settings {
       display: flex;
       flex-wrap: wrap;
@@ -84,28 +91,28 @@
       justify-content: center;
       align-items: flex-start;
     }
+
     .setting-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 150px;
+      min-width: 120px;
     }
+
     .setting-item label {
       font-weight: 600;
       margin-bottom: 0.3rem;
       text-align: center;
     }
+
     .setting-item input[type=range],
     .setting-item select,
-    .setting-item input[type=color] {
+    .setting-item input[type=color],
+    .setting-item input[type=text] {
       width: 100%;
       box-sizing: border-box;
     }
-    .setting-item output {
-      margin-top: 0.3rem;
-      font-weight: bold;
-      font-size: 1rem;
-    }
+
     footer#footer {
       text-align: center;
       font-size: 0.85rem;
@@ -113,53 +120,57 @@
       padding: 1rem 0 2rem 0;
       user-select: none;
     }
+
     footer#footer a {
       color: var(--color-primary);
       text-decoration: none;
     }
+
     footer#footer a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <header id="appTitle">Text Enlarger App</header>
+  <header id="appTitle">文字拡大アプリ</header>
+
   <main>
     <section>
-      <h2>テキスト入力</h2>
-      <textarea id="textInput" placeholder="ここに文字を入力してください"></textarea>
+      <h2>入力</h2>
+      <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
     </section>
+
     <section>
-      <h2>拡大表示</h2>
+      <h2>出力</h2>
       <div id="displayArea">test</div>
     </section>
+
     <section>
-      <h2>表示設定</h2>
+      <h2>設定</h2>
       <div id="settings">
         <div class="setting-item">
-          <label for="fontSizeSlider">文字サイズ</label>
-          <input type="range" id="fontSizeSlider" min="20" max="600" step="1" value="120" />
+          <label for="fontSizeSlider">フォントサイズ (px)</label>
+          <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
           <output id="fontSizeValue">120</output>
         </div>
         <div class="setting-item">
-          <label for="fontWeightSlider">文字の太さ</label>
+          <label for="fontWeightSlider">フォント太さ</label>
           <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
           <output id="fontWeightValue">600</output>
         </div>
         <div class="setting-item">
           <label for="lineHeightSlider">行間</label>
-          <input type="range" id="lineHeightSlider" min="1" max="2.5" step="0.05" value="1.4" />
+          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
           <output id="lineHeightValue">1.4</output>
         </div>
         <div class="setting-item">
-          <label for="fontSelector">フォント</label>
+          <label for="fontSelector">フォント選択</label>
           <select id="fontSelector">
             <option value="'Noto Serif JP', serif">Noto Serif JP</option>
             <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
-            <option value="'Potta One', cursive">Potta One</option>
             <option value="Arial, sans-serif">Arial</option>
             <option value="Verdana, sans-serif">Verdana</option>
-            <option value="'Courier New', monospace">Courier New</option>
+            <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
         <div class="setting-item">
@@ -169,57 +180,70 @@
       </div>
     </section>
   </main>
+
   <footer id="footer">
-    <div id="footer-author"><span id="year"></span> Text Enlarger App</div>
+    <div id="footer-author">©️2025年 Text enlargement app</div>
     <div>
-      使用技術：
-      <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>、
-      <a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>、
-      <a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">JavaScript</a>、
+      使用ライブラリー:
+      <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
+      <a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>,
+      <a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">Vanilla JavaScript</a>,
       <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
     </div>
   </footer>
+
   <script>
     const textInput = document.getElementById("textInput");
     const displayArea = document.getElementById("displayArea");
     const header = document.getElementById("appTitle");
+
     const fontSizeSlider = document.getElementById("fontSizeSlider");
     const fontSizeValue = document.getElementById("fontSizeValue");
+
     const fontWeightSlider = document.getElementById("fontWeightSlider");
     const fontWeightValue = document.getElementById("fontWeightValue");
+
     const lineHeightSlider = document.getElementById("lineHeightSlider");
     const lineHeightValue = document.getElementById("lineHeightValue");
+
     const fontSelector = document.getElementById("fontSelector");
     const accentSelector = document.getElementById("accentSelector");
 
     function updateDisplay() {
-      displayArea.textContent = textInput.value.trim() || "サンプル";
+      displayArea.textContent = textInput.value.trim() || "test";
     }
+
     function updateStyles() {
       displayArea.style.fontSize = fontSizeSlider.value + "px";
       displayArea.style.fontWeight = fontWeightSlider.value;
       displayArea.style.lineHeight = lineHeightSlider.value;
       displayArea.style.fontFamily = fontSelector.value;
       displayArea.style.color = "#000000";
+
       textInput.style.borderColor = accentSelector.value;
       displayArea.style.borderColor = accentSelector.value;
       displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`;
+
       header.style.backgroundColor = accentSelector.value;
       updateHeaderTextColor(accentSelector.value);
     }
+
     function luminance(r, g, b) {
-      const a = [r, g, b].map(v => {
+      const a = [r, g, b].map((v) => {
         v /= 255;
         return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
       });
-      return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+      return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
     }
+
     function getContrastColor(hexColor) {
-      const r = parseInt(hexColor.substr(1,2),16);
-      const g = parseInt(hexColor.substr(3,2),16);
-      const b = parseInt(hexColor.substr(5,2),16);
-      return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff";
+      const r = parseInt(hexColor.substr(1, 2), 16);
+      const g = parseInt(hexColor.substr(3, 2), 16);
+      const b = parseInt(hexColor.substr(5, 2), 16);
+      const lum = luminance(r, g, b);
+      return lum > 0.5 ? "#000000" : "#ffffff";
     }
+
     function updateHeaderTextColor(bgColor) {
       header.style.color = getContrastColor(bgColor);
     }
@@ -242,16 +266,18 @@
 
     updateDisplay();
     updateStyles();
+  </script>
 
-    const footerAuthor = document.getElementById("footer-author");
+  <script>
+    const footerAuthor = document.getElementById("footer-author"); 
     const hostname = window.location.hostname;
     const baseYear = 2025;
     const currentYear = new Date().getFullYear();
     const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
-    if(hostname.includes("hamuzon.github.io")){
+    if (hostname.includes("hamuzon.github.io")) {
       footerAuthor.innerHTML = `©️${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
-    } else if(hostname.includes("hamusata.f5.si")){
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+    } else if (hostname.includes("hamusata.f5.si")) {
+      footerAuthor.innerHTML = `©️${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
     } else {
       footerAuthor.innerHTML = `©️${yearText} Text Enlarger App`;
     }
