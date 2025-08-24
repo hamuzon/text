@@ -32,7 +32,7 @@
       background-color: var(--color-primary);
       padding: 1.2rem 2rem;
       font-weight: 700;
-      font-size: 2.2rem;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
       letter-spacing: 0.12em;
       text-align: center;
       user-select: none;
@@ -47,13 +47,13 @@
       display: flex;
       flex-direction: column;
       gap: 2rem;
-      min-width: 320px;
+      min-width: 280px;
     }
 
     textarea#textInput {
       width: 100%;
-      min-height: 120px;
-      font-size: 28px;
+      min-height: 100px;
+      font-size: clamp(16px, 4vw, 28px);
       font-family: inherit;
       padding: 0.8rem 1rem;
       border-radius: var(--shape-corner-medium);
@@ -67,9 +67,9 @@
 
     #displayArea {
       width: 100%;
-      min-height: 180px;
+      min-height: 150px;
       font-weight: 600;
-      font-size: var(--font-size, 120px);
+      font-size: var(--font-size, clamp(40px, 15vw, 120px));
       line-height: var(--line-height, 1.4);
       color: #000000;
       padding: 1rem;
@@ -81,6 +81,7 @@
       user-select: text;
       border: 2px solid var(--color-primary);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      overflow-wrap: anywhere;
     }
 
     #settings {
@@ -92,10 +93,11 @@
     }
 
     .setting-item {
+      flex: 1 1 150px;
+      max-width: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 150px;
     }
 
     .setting-item label {
@@ -119,7 +121,7 @@
 
     footer#footer {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
       color: var(--color-secondary);
       padding: 1rem 0 2rem 0;
       user-select: none;
@@ -132,6 +134,20 @@
 
     footer#footer a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 0 0.5rem;
+      }
+      #settings {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .setting-item {
+        max-width: none;
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -292,4 +308,3 @@
   </script>
 </body>
 </html>
-
