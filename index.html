@@ -17,7 +17,6 @@
       --color-on-background: #1a1c19;
       --shape-corner-medium: 12px;
     }
-
     body {
       margin: 0;
       font-family: 'Potta One', cursive;
@@ -27,7 +26,6 @@
       display: flex;
       flex-direction: column;
     }
-
     header {
       background-color: var(--color-primary);
       color: var(--header-text-color);
@@ -36,10 +34,9 @@
       font-size: 2.2rem;
       letter-spacing: 0.12em;
       text-align: center;
-      user-select: none;
+      user-select: text;
       transition: color 0.3s ease;
     }
-
     main {
       max-width: 900px;
       margin: 0 auto 2rem auto;
@@ -50,7 +47,6 @@
       gap: 2rem;
       min-width: 320px;
     }
-
     textarea#textInput {
       width: 100%;
       min-height: 120px;
@@ -64,8 +60,8 @@
       color: var(--color-on-background);
       background-color: var(--color-background);
       transition: border-color 0.3s ease;
+      user-select: text;
     }
-
     #displayArea {
       width: 100%;
       min-height: 180px;
@@ -84,7 +80,6 @@
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
       font-family: 'Potta One', cursive;
     }
-
     #settings {
       display: flex;
       flex-wrap: wrap;
@@ -92,20 +87,17 @@
       justify-content: center;
       align-items: flex-start;
     }
-
     .setting-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       min-width: 120px;
     }
-
     .setting-item label {
       font-weight: 600;
       margin-bottom: 0.3rem;
       text-align: center;
     }
-
     .setting-item input[type=range],
     .setting-item select,
     .setting-item input[type=color],
@@ -113,21 +105,18 @@
       width: 100%;
       box-sizing: border-box;
     }
-
     footer#footer {
       text-align: center;
       font-size: 0.85rem;
       color: var(--color-secondary);
       padding: 1rem 0 2rem 0;
-      user-select: none;
+      user-select: text;
       font-family: 'Potta One', cursive;
     }
-
     footer#footer a {
       color: var(--color-primary);
       text-decoration: none;
     }
-
     footer#footer a:hover {
       text-decoration: underline;
     }
@@ -135,18 +124,15 @@
 </head>
 <body>
   <header id="appTitle">文字拡大アプリ</header>
-
   <main>
     <section>
       <h2>入力</h2>
       <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
     </section>
-
     <section>
       <h2>出力</h2>
       <div id="displayArea">test</div>
     </section>
-
     <section>
       <h2>設定</h2>
       <div id="settings">
@@ -168,6 +154,7 @@
         <div class="setting-item">
           <label for="fontSelector">フォント選択</label>
           <select id="fontSelector">
+            <option value="'Potta One', cursive">Potta One</option>
             <option value="'Noto Serif JP', serif">Noto Serif JP</option>
             <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
             <option value="Arial, sans-serif">Arial</option>
@@ -182,9 +169,8 @@
       </div>
     </section>
   </main>
-
   <footer id="footer">
-    <div id="footer-author">©️2025年 Text enlargement app</div>
+    <div id="footer-author">©️2025 Text enlargement app</div>
     <div>
       使用ライブラリー:
       <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
@@ -193,43 +179,33 @@
       <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
     </div>
   </footer>
-
   <script>
     const textInput = document.getElementById("textInput");
     const displayArea = document.getElementById("displayArea");
     const header = document.getElementById("appTitle");
-
     const fontSizeSlider = document.getElementById("fontSizeSlider");
     const fontSizeValue = document.getElementById("fontSizeValue");
-
     const fontWeightSlider = document.getElementById("fontWeightSlider");
     const fontWeightValue = document.getElementById("fontWeightValue");
-
     const lineHeightSlider = document.getElementById("lineHeightSlider");
     const lineHeightValue = document.getElementById("lineHeightValue");
-
     const fontSelector = document.getElementById("fontSelector");
     const accentSelector = document.getElementById("accentSelector");
-
     function updateDisplay() {
       displayArea.textContent = textInput.value.trim() || "test";
     }
-
     function updateStyles() {
       displayArea.style.fontSize = fontSizeSlider.value + "px";
       displayArea.style.fontWeight = fontWeightSlider.value;
       displayArea.style.lineHeight = lineHeightSlider.value;
       displayArea.style.fontFamily = fontSelector.value;
       displayArea.style.color = "#000000";
-
       textInput.style.borderColor = accentSelector.value;
       displayArea.style.borderColor = accentSelector.value;
       displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`;
-
       header.style.backgroundColor = accentSelector.value;
-      updateHeaderTextColor(accentSelector.value);
+      header.style.color = getContrastColor(accentSelector.value);
     }
-
     function luminance(r, g, b) {
       const a = [r, g, b].map((v) => {
         v /= 255;
@@ -237,39 +213,21 @@
       });
       return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
     }
-
     function getContrastColor(hexColor) {
       const r = parseInt(hexColor.substr(1, 2), 16);
       const g = parseInt(hexColor.substr(3, 2), 16);
       const b = parseInt(hexColor.substr(5, 2), 16);
-      const lum = luminance(r, g, b);
-      return lum > 0.5 ? "#000000" : "#ffffff";
+      return luminance(r, g, b) > 0.5 ? "#000000" : "#ffffff";
     }
-
-    function updateHeaderTextColor(bgColor) {
-      header.style.color = getContrastColor(bgColor);
-    }
-
     textInput.addEventListener("input", updateDisplay);
-    fontSizeSlider.addEventListener("input", () => {
-      fontSizeValue.textContent = fontSizeSlider.value;
-      updateStyles();
-    });
-    fontWeightSlider.addEventListener("input", () => {
-      fontWeightValue.textContent = fontWeightSlider.value;
-      updateStyles();
-    });
-    lineHeightSlider.addEventListener("input", () => {
-      lineHeightValue.textContent = lineHeightSlider.value;
-      updateStyles();
-    });
+    fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
+    fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
+    lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
     fontSelector.addEventListener("input", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
-
     updateDisplay();
     updateStyles();
   </script>
-
   <script>
     const footerAuthor = document.getElementById("footer-author"); 
     const hostname = window.location.hostname;
