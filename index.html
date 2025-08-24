@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>文字拡大アプリ</title>
-  <meta name="description" content="入力したテキストを大きく表示するシンプルなアプリ" />
+  <title>Text Enlarger App</title>
+  <meta name="description" content="入力したテキストを大きく表示するアプリ" />
   <link rel="icon" href="icon-light.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Sawarabi+Mincho&family=Potta+One&display=swap" rel="stylesheet" />
   <style>
@@ -123,7 +123,7 @@
   </style>
 </head>
 <body>
-  <header id="appTitle">文字拡大アプリ</header>
+  <header id="appTitle">Text Enlarger App</header>
   <main>
     <section>
       <h2>テキスト入力</h2>
@@ -131,7 +131,7 @@
     </section>
     <section>
       <h2>拡大表示</h2>
-      <div id="displayArea">サンプル</div>
+      <div id="displayArea">test</div>
     </section>
     <section>
       <h2>表示設定</h2>
@@ -170,7 +170,7 @@
     </section>
   </main>
   <footer id="footer">
-    <div id="footer-author"><span id="year"></span> 文字拡大アプリ</div>
+    <div id="footer-author"><span id="year"></span> Text Enlarger App</div>
     <div>
       使用技術：
       <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>、
@@ -208,22 +208,22 @@
       updateHeaderTextColor(accentSelector.value);
     }
     function luminance(r, g, b) {
-      const a = [r, g, b].map((v) => {
+      const a = [r, g, b].map(v => {
         v /= 255;
         return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
       });
-      return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+      return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
     }
     function getContrastColor(hexColor) {
-      const r = parseInt(hexColor.substr(1, 2), 16);
-      const g = parseInt(hexColor.substr(3, 2), 16);
-      const b = parseInt(hexColor.substr(5, 2), 16);
-      const lum = luminance(r, g, b);
-      return lum > 0.5 ? "#000000" : "#ffffff";
+      const r = parseInt(hexColor.substr(1,2),16);
+      const g = parseInt(hexColor.substr(3,2),16);
+      const b = parseInt(hexColor.substr(5,2),16);
+      return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff";
     }
     function updateHeaderTextColor(bgColor) {
       header.style.color = getContrastColor(bgColor);
     }
+
     textInput.addEventListener("input", updateDisplay);
     fontSizeSlider.addEventListener("input", () => {
       fontSizeValue.textContent = fontSizeSlider.value;
@@ -248,12 +248,12 @@
     const baseYear = 2025;
     const currentYear = new Date().getFullYear();
     const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
-    if (hostname.includes("hamuzon.github.io")) {
+    if(hostname.includes("hamuzon.github.io")){
       footerAuthor.innerHTML = `©️${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
-    } else if (hostname.includes("hamusata.f5.si")) {
+    } else if(hostname.includes("hamusata.f5.si")){
       footerAuthor.innerHTML = `©️${yearText} <a href="https://hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
     } else {
-      footerAuthor.innerHTML = `©️${yearText} 文字拡大アプリ`;
+      footerAuthor.innerHTML = `©️${yearText} Text Enlarger App`;
     }
   </script>
 </body>
