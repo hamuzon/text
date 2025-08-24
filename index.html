@@ -6,7 +6,7 @@
   <title>Text enlargement app</title>
   <meta name="description" content="Text拡大appですいれたText拡大表示します" />
   <link rel="icon" href="icon-light.png" type="image/png" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Sawarabi+Mincho&family=Potta+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Sawarabi+Mincho&display=swap" rel="stylesheet" />
   <style>
     :root {
       --color-primary: #00793d;
@@ -53,7 +53,7 @@
     textarea#textInput {
       width: 100%;
       min-height: 100px;
-      font-size: clamp(16px, 4vw, 28px);
+      font-size: clamp(16px, 4vw, 40px);
       font-family: inherit;
       padding: 0.8rem 1rem;
       border-radius: var(--shape-corner-medium);
@@ -108,7 +108,8 @@
 
     .setting-item input[type=range],
     .setting-item select,
-    .setting-item input[type=color] {
+    .setting-item input[type=color],
+    .setting-item input[type=text] {
       width: 100%;
       box-sizing: border-box;
     }
@@ -170,7 +171,7 @@
       <div id="settings">
         <div class="setting-item">
           <label for="fontSizeSlider">フォントサイズ (px)</label>
-          <input type="range" id="fontSizeSlider" min="20" max="600" step="1" value="120" />
+          <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
           <output id="fontSizeValue">120</output>
         </div>
         <div class="setting-item">
@@ -180,7 +181,7 @@
         </div>
         <div class="setting-item">
           <label for="lineHeightSlider">行間</label>
-          <input type="range" id="lineHeightSlider" min="1" max="2.5" step="0.05" value="1.4" />
+          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
           <output id="lineHeightValue">1.4</output>
         </div>
         <div class="setting-item">
@@ -188,10 +189,9 @@
           <select id="fontSelector">
             <option value="'Noto Serif JP', serif">Noto Serif JP</option>
             <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
-            <option value="'Potta One', cursive">Potta One</option>
             <option value="Arial, sans-serif">Arial</option>
             <option value="Verdana, sans-serif">Verdana</option>
-            <option value="'Courier New', monospace">Courier New</option>
+            <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
         <div class="setting-item">
@@ -203,7 +203,7 @@
   </main>
 
   <footer id="footer">
-    <div id="footer-author"><span id="year"></span> Text enlargement app</div>
+    <div id="footer-author">©️2025年 Text enlargement app</div>
     <div>
       使用ライブラリー:
       <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
@@ -287,6 +287,7 @@
     });
 
     fontSelector.addEventListener("input", updateStyles);
+
     accentSelector.addEventListener("input", updateStyles);
 
     updateDisplay();
@@ -294,16 +295,13 @@
 
     const footerAuthor = document.getElementById("footer-author");
     const hostname = window.location.hostname;
-    const baseYear = 2025;
-    const currentYear = new Date().getFullYear();
-    const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
 
     if (hostname.includes("hamuzon.github.io")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+      footerAuthor.innerHTML = '©️2025年 <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>';
     } else if (hostname.includes("hamusata.f5.si")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+      footerAuthor.innerHTML = '©️2025年 <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>';
     } else {
-      footerAuthor.innerHTML = `©️${yearText} Text enlargement app`;
+      footerAuthor.textContent = '©️2025年 Text enlargement app';
     }
   </script>
 </body>
