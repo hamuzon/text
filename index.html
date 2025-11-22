@@ -66,7 +66,6 @@ textarea#textInput {
   resize: vertical;
   background-color: var(--color-background);
   color: var(--color-on-background);
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #displayArea {
@@ -81,7 +80,6 @@ textarea#textInput {
   box-shadow: 0 0 16px var(--color-primary);
   white-space: pre-wrap;
   word-break: break-word;
-  color: #000;
   overflow-wrap: break-word;
   overflow-x: hidden;
   transition: all 0.2s ease;
@@ -104,8 +102,8 @@ button {
   transition: all 0.2s ease;
 }
 
-#copyButton { background-color: var(--color-primary); color: #fff; }
-#resetButton { background-color: var(--color-secondary); color: #fff; }
+#copyButton { }
+#resetButton { }
 
 #settings {
   display: flex;
@@ -139,11 +137,7 @@ footer#footer {
   padding: 1.5rem 0 2.5rem 0;
 }
 
-footer#footer a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
+footer#footer a { color: var(--color-primary); text-decoration: none; }
 footer#footer a:hover { text-decoration: underline; }
 </style>
 </head>
@@ -236,12 +230,11 @@ const initialState = {
   weight: "600",
   size: "120",
   line: "1.4",
-  color: "#00793d",
-  background: "#fff"
+  color: "#00793d"
 };
 
 // スタイル更新
-function updateStyles() {
+function updateStyles(){
   displayArea.style.fontSize = fontSizeSlider.value + "px";
   displayArea.style.fontWeight = fontWeightSlider.value;
   displayArea.style.lineHeight = lineHeightSlider.value;
@@ -256,18 +249,19 @@ function updateStyles() {
   resetButton.style.backgroundColor = accentSelector.value;
   resetButton.style.color = getContrastColor(accentSelector.value);
 
+  // アクセント白の場合は背景黒
   if(accentSelector.value.toLowerCase() === "#ffffff"){
-    document.body.style.backgroundColor = "#000";
     displayArea.style.backgroundColor = "#000";
     displayArea.style.color = "#fff";
     textInput.style.backgroundColor = "#000";
     textInput.style.color = "#fff";
+    document.body.style.backgroundColor = "#000";
   } else {
-    document.body.style.backgroundColor = initialState.background;
-    displayArea.style.backgroundColor = initialState.background;
+    displayArea.style.backgroundColor = "#fff";
     displayArea.style.color = "#000";
-    textInput.style.backgroundColor = initialState.background;
+    textInput.style.backgroundColor = "#fff";
     textInput.style.color = "#000";
+    document.body.style.backgroundColor = "#fff";
   }
 }
 
@@ -288,20 +282,23 @@ function updateDisplay(){
   displayArea.textContent = textInput.value.trim() || "test";
 }
 
-// URL更新 (入力ありのみ)
+// URL更新（入力があるときのみリアルタイム）
 function updateURLParams(){
   const url = new URL(window.location);
   const params = new URLSearchParams();
 
-  if(textInput.value !== initialState.text) params.set("text", textInput.value);
+  if(textInput.value) params.set("text", textInput.value);
   if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
   if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
   if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
   if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
   if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
 
-  const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
-  window.history.replaceState({}, "", newURL);
+  if(textInput.value || fontSelector.value!==initialState.font || fontWeightSlider.value!==initialState.weight ||
+     fontSizeSlider.value!==initialState.size || lineHeightSlider.value!==initialState.line ||
+     accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()){
+    window.history.replaceState({}, "", url.origin + url.pathname + "?" + params.toString());
+  }
 }
 
 // イベント
@@ -312,20 +309,18 @@ lineHeightSlider.addEventListener("input",()=>{ lineHeightValue.textContent=line
 fontSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
 accentSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
 
-// Copyボタン
+// Copyボタン（順序固定）
 copyButton.addEventListener("click",()=>{
-  const url = window.location.origin + window.location.pathname;
   const params = new URLSearchParams();
-
-  if(textInput.value !== initialState.text) params.set("text", textInput.value);
+  if(textInput.value) params.set("text", textInput.value);
   if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
   if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
   if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
   if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
   if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
 
-  const finalURL = url + "?" + params.toString();
-  navigator.clipboard.writeText(finalURL).then(()=>{ alert("URLコピーしました"); });
+  const url = window.location.origin + window.location.pathname + "?" + params.toString();
+  navigator.clipboard.writeText(url).then(()=>{ alert("URLコピーしました"); });
 });
 
 // Resetボタン
@@ -345,7 +340,7 @@ resetButton.addEventListener("click",()=>{
   updateStyles();
   saveToLocal();
 
-  // URLクリエパス消す
+  // クリアパス消去
   const url = window.location.origin + window.location.pathname;
   window.history.replaceState({}, "", url);
   localStorage.removeItem('textAppState');
