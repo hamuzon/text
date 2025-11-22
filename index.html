@@ -19,9 +19,7 @@
   --shape-corner-medium: 12px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -64,7 +62,7 @@ section {
 
 textarea#textInput {
   width: 100%;
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-size: clamp(1.5rem, 5vw, 3rem);
   min-height: 120px;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
@@ -76,7 +74,7 @@ textarea#textInput {
 
 #displayArea {
   width: 100%;
-  font-size: clamp(2rem, 10vw, 20rem);
+  font-size: clamp(2rem, 10vw, 8rem);
   font-weight: 600;
   line-height: 1.4;
   padding: 1rem;
@@ -91,28 +89,26 @@ textarea#textInput {
   overflow-x: hidden;
 }
 
-#buttons {
+.button-group {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
-#buttons button {
-  padding: 0.8rem 1.5rem;
+button {
+  padding: 0.6rem 1.2rem;
   border-radius: var(--shape-corner-medium);
   border: 2px solid var(--color-primary);
   background-color: var(--color-primary);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s;
 }
 
-#buttons button:hover {
-  background-color: #ffffff;
-  color: var(--color-primary);
+button:hover {
+  filter: brightness(0.85);
 }
 
 #settings {
@@ -121,7 +117,6 @@ textarea#textInput {
   gap: 1.5rem;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 1rem;
 }
 
 .setting-item {
@@ -160,7 +155,6 @@ footer#footer a:hover {
 }
 </style>
 </head>
-
 <body>
 
 <header id="appTitle">文字拡大アプリ</header>
@@ -176,9 +170,9 @@ footer#footer a:hover {
 <h2>出力</h2>
 <div id="displayArea">test</div>
 
-<div id="buttons">
-  <button id="copyButton">Copy</button>
-  <button id="resetButton">リセット</button>
+<div class="button-group">
+  <button id="copyBtn">Copy</button>
+  <button id="resetBtn">Reset</button>
 </div>
 </section>
 
@@ -187,22 +181,19 @@ footer#footer a:hover {
 <div id="settings">
   <div class="setting-item">
     <label for="fontSizeSlider">フォントサイズ (px)</label>
-    <input type="range" id="fontSizeSlider" min="40" max="2000" step="1" value="120" />
+    <input type="range" id="fontSizeSlider" min="40" max="1200" step="1" value="120" />
     <output id="fontSizeValue">120</output>
   </div>
-
   <div class="setting-item">
     <label for="fontWeightSlider">フォント太さ</label>
     <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
     <output id="fontWeightValue">600</output>
   </div>
-
   <div class="setting-item">
     <label for="lineHeightSlider">行間</label>
     <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
     <output id="lineHeightValue">1.4</output>
   </div>
-
   <div class="setting-item">
     <label for="fontSelector">フォント選択</label>
     <select id="fontSelector">
@@ -214,7 +205,6 @@ footer#footer a:hover {
       <option value="Courier New, monospace">Courier New</option>
     </select>
   </div>
-
   <div class="setting-item">
     <label for="accentSelector">アクセントカラー</label>
     <input type="color" id="accentSelector" value="#00793d" />
@@ -247,10 +237,10 @@ const lineHeightSlider = document.getElementById("lineHeightSlider");
 const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
-const copyButton = document.getElementById("copyButton");
-const resetButton = document.getElementById("resetButton");
+const copyBtn = document.getElementById("copyBtn");
+const resetBtn = document.getElementById("resetBtn");
 
-// 表示更新
+// 入力・出力更新
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test";
 }
@@ -266,6 +256,12 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
   header.style.backgroundColor = accentSelector.value;
   header.style.color = getContrastColor(accentSelector.value);
+  // ボタン色更新
+  [copyBtn, resetBtn].forEach(btn=>{
+    btn.style.backgroundColor = accentSelector.value;
+    btn.style.color = getContrastColor(accentSelector.value);
+    btn.style.borderColor = accentSelector.value;
+  });
 }
 
 // コントラスト計算
@@ -280,9 +276,9 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000000":"#ffffff";
 }
 
-// 保存
-function saveToLocal(){
-  const state = {
+// 保存とイベント
+function saveState(){
+  const state={
     text:textInput.value,
     font: fontSelector.value,
     weight: fontWeightSlider.value,
@@ -293,59 +289,71 @@ function saveToLocal(){
   localStorage.setItem('textAppState', JSON.stringify(state));
 }
 
-// ロード
-function loadFromLocal(){
+function loadState(){
   const state = JSON.parse(localStorage.getItem('textAppState')||'{}');
-  if(state.text) textInput.value = state.text;
-  if(state.font) fontSelector.value = state.font;
-  if(state.weight) fontWeightSlider.value = state.weight;
-  if(state.size) fontSizeSlider.value = state.size;
-  if(state.line) lineHeightSlider.value = state.line;
-  if(state.color) accentSelector.value = state.color;
+  if(!urlParams.has('text') && state.text) textInput.value = state.text;
+  if(!urlParams.has('font') && state.font) fontSelector.value = state.font;
+  if(!urlParams.has('weight') && state.weight) fontWeightSlider.value = state.weight;
+  if(!urlParams.has('size') && state.size) fontSizeSlider.value = state.size;
+  if(!urlParams.has('line') && state.line) lineHeightSlider.value = state.line;
+  if(!urlParams.has('color') && state.color) accentSelector.value = state.color;
 }
 
-// イベント
-textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();});
-fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();});
-fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();});
-lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();});
-fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
-accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
+// URLパラメータ
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('text')) textInput.value = urlParams.get('text');
+if(urlParams.get('t')) textInput.value = urlParams.get('t');
+if(urlParams.get('font')) fontSelector.value = urlParams.get('font');
+if(urlParams.get('weight')) fontWeightSlider.value = urlParams.get('weight');
+if(urlParams.get('size')) fontSizeSlider.value = urlParams.get('size');
+if(urlParams.get('line')) lineHeightSlider.value = urlParams.get('line');
+if(urlParams.get('color')) accentSelector.value = urlParams.get('color');
 
-// Copy
-copyButton.addEventListener("click", ()=>{
-  navigator.clipboard.writeText(displayArea.textContent)
-    .then(()=>{alert("コピーしました");})
-    .catch(()=>{alert("コピー失敗");});
-});
-
-// Reset
-resetButton.addEventListener("click", ()=>{
-  textInput.value = "";
-  fontSizeSlider.value = 120;
-  fontWeightSlider.value = 600;
-  lineHeightSlider.value = 1.4;
-  fontSelector.value = "'Noto Serif JP', serif";
-  accentSelector.value = "#00793d";
-  updateDisplay();
-  updateStyles();
-  saveToLocal();
-});
-
-// URLパラメータ優先
-const params = new URLSearchParams(window.location.search);
-if(params.get('text')) textInput.value = params.get('text');
-if(params.get('t')) textInput.value = params.get('t');
-if(params.get('font')) fontSelector.value = params.get('font');
-if(params.get('weight')) fontWeightSlider.value = params.get('weight');
-if(params.get('size')) fontSizeSlider.value = params.get('size');
-if(params.get('line')) lineHeightSlider.value = params.get('line');
-if(params.get('color')) accentSelector.value = params.get('color');
-
-// ローカル保存ロード
-loadFromLocal();
 updateDisplay();
 updateStyles();
+loadState();
+updateDisplay();
+updateStyles();
+
+// イベント
+textInput.addEventListener("input",()=>{updateDisplay(); saveState();});
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveState();});
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveState();});
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveState();});
+fontSelector.addEventListener("input",()=>{updateStyles(); saveState();});
+accentSelector.addEventListener("input",()=>{updateStyles(); saveState();});
+
+// Copyボタン
+copyBtn.addEventListener("click",()=>{
+  const url = new URL(window.location.href);
+  url.searchParams.set('text', textInput.value);
+  url.searchParams.set('font', fontSelector.value);
+  url.searchParams.set('weight', fontWeightSlider.value);
+  url.searchParams.set('size', fontSizeSlider.value);
+  url.searchParams.set('line', lineHeightSlider.value);
+  url.searchParams.set('color', accentSelector.value);
+  navigator.clipboard.writeText(url.toString());
+  alert("URLコピーしました");
+});
+
+// Resetボタン
+resetBtn.addEventListener("click",()=>{
+  const url = new URL(window.location.href);
+  url.search = '';
+  window.history.replaceState({}, '', url.toString());
+  localStorage.removeItem('textAppState');
+  textInput.value = '';
+  fontSelector.value = "'Noto Serif JP', serif";
+  fontWeightSlider.value = 600;
+  fontSizeSlider.value = 120;
+  lineHeightSlider.value = 1.4;
+  accentSelector.value = "#00793d";
+  fontSizeValue.textContent = fontSizeSlider.value;
+  fontWeightValue.textContent = fontWeightSlider.value;
+  lineHeightValue.textContent = lineHeightSlider.value;
+  updateDisplay();
+  updateStyles();
+});
 
 // フッター
 const footerAuthor=document.getElementById("footer-author");
