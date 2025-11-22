@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Text enlargement app</title>
-  <meta name="description" content="Text拡大appですいれたText拡大表示します" />
+  <title>Text Enlargement App</title>
+  <meta name="description" content="Text拡大アプリです。入力したTextを拡大表示します" />
   <link rel="icon" href="icon-light.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --color-primary: #00793d;
-      --color-primary-contrast-light: #ffffff;
-      --color-primary-contrast-dark: #000000;
       --color-secondary: #4a6354;
       --color-background: #ffffff;
       --color-on-background: #1a1c19;
       --shape-corner-medium: 12px;
     }
+
     body {
       margin: 0;
       font-family: 'Noto Serif JP', serif;
@@ -26,131 +27,168 @@
       display: flex;
       flex-direction: column;
     }
+
     header {
       background-color: var(--color-primary);
-      color: var(--header-text-color);
-      padding: 1.2rem 2rem;
+      color: #ffffff;
+      padding: 1.5rem 2rem;
       font-weight: 700;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       letter-spacing: 0.12em;
       text-align: center;
       user-select: text;
-      transition: color 0.3s ease;
     }
+
     main {
       max-width: 900px;
       margin: 0 auto 2rem auto;
-      padding: 0 1rem;
+      padding: 1rem;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 2.5rem;
       min-width: 320px;
     }
+
     textarea#textInput {
       width: 100%;
-      min-height: 120px;
-      font-size: 40px;
+      min-height: 140px;
+      font-size: 42px;
       font-family: inherit;
-      padding: 0.8rem 1rem;
+      padding: 1rem;
       border-radius: var(--shape-corner-medium);
       border: 2px solid var(--color-primary);
       resize: vertical;
       box-sizing: border-box;
-      color: var(--color-on-background);
       background-color: var(--color-background);
-      transition: border-color 0.3s ease;
-      user-select: text;
+      color: var(--color-on-background);
     }
+
+    #displayWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #copyButton {
+      align-self: flex-end;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      border-radius: var(--shape-corner-medium);
+      border: 2px solid var(--color-primary);
+      background-color: var(--color-primary);
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #copyButton:hover {
+      background-color: #00582a;
+    }
+
     #displayArea {
       width: 100%;
-      min-height: 180px;
+      min-height: 200px;
       font-weight: 600;
-      font-size: var(--font-size, 120px);
-      line-height: var(--line-height, 1.4);
-      color: #000000;
-      padding: 0.6rem 0;
+      font-size: 120px;
+      line-height: 1.5;
+      padding: 1rem 0;
       border-radius: var(--shape-corner-medium);
       background-color: var(--color-background);
+      border: 2px solid var(--color-primary);
       box-shadow: 0 0 12px var(--color-primary);
       white-space: pre-wrap;
       word-break: break-word;
-      user-select: text;
-      border: 2px solid var(--color-primary);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      color: #000000;
       font-family: 'Noto Serif JP', serif;
     }
+
     #settings {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem;
+      gap: 1.5rem;
       justify-content: center;
       align-items: flex-start;
     }
+
     .setting-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 120px;
+      min-width: 140px;
     }
+
     .setting-item label {
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
       text-align: center;
     }
-    .setting-item input[type=range],
-    .setting-item select,
-    .setting-item input[type=color],
-    .setting-item input[type=text] {
+
+    .setting-item input,
+    .setting-item select {
       width: 100%;
       box-sizing: border-box;
     }
+
     footer#footer {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--color-secondary);
-      padding: 1rem 0 2rem 0;
+      padding: 1.5rem 0 2.5rem 0;
       user-select: text;
       font-family: 'Noto Serif JP', serif;
     }
+
     footer#footer a {
       color: var(--color-primary);
       text-decoration: none;
     }
+
     footer#footer a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
+
   <header id="appTitle">文字拡大アプリ</header>
+
   <main>
     <section>
       <h2>入力</h2>
       <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
     </section>
+
     <section>
       <h2>出力</h2>
-      <div id="displayArea">test</div>
+      <div id="displayWrapper">
+        <button id="copyButton">Copy</button>
+        <div id="displayArea">test</div>
+      </div>
     </section>
+
     <section>
       <h2>設定</h2>
       <div id="settings">
         <div class="setting-item">
           <label for="fontSizeSlider">フォントサイズ (px)</label>
-          <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
+          <input type="range" id="fontSizeSlider" min="40" max="2000" step="1" value="120" />
           <output id="fontSizeValue">120</output>
         </div>
+
         <div class="setting-item">
           <label for="fontWeightSlider">フォント太さ</label>
           <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
           <output id="fontWeightValue">600</output>
         </div>
+
         <div class="setting-item">
           <label for="lineHeightSlider">行間</label>
           <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
           <output id="lineHeightValue">1.4</output>
         </div>
+
         <div class="setting-item">
           <label for="fontSelector">フォント選択</label>
           <select id="fontSelector">
@@ -162,6 +200,7 @@
             <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
+
         <div class="setting-item">
           <label for="accentSelector">アクセントカラー</label>
           <input type="color" id="accentSelector" value="#00793d" />
@@ -169,8 +208,9 @@
       </div>
     </section>
   </main>
+
   <footer id="footer">
-    <div id="footer-author">©️2025 Text enlargement app</div>
+    <div id="footer-author">&copy;2025 Text enlargement app</div>
     <div>
       使用ライブラリー:
       <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
@@ -179,6 +219,7 @@
       <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
     </div>
   </footer>
+
   <script>
     const textInput = document.getElementById("textInput");
     const displayArea = document.getElementById("displayArea");
@@ -191,9 +232,12 @@
     const lineHeightValue = document.getElementById("lineHeightValue");
     const fontSelector = document.getElementById("fontSelector");
     const accentSelector = document.getElementById("accentSelector");
+    const copyButton = document.getElementById("copyButton");
+
     function updateDisplay() {
       displayArea.textContent = textInput.value.trim() || "test";
     }
+
     function updateStyles() {
       displayArea.style.fontSize = fontSizeSlider.value + "px";
       displayArea.style.fontWeight = fontWeightSlider.value;
@@ -206,41 +250,50 @@
       header.style.backgroundColor = accentSelector.value;
       header.style.color = getContrastColor(accentSelector.value);
     }
+
     function luminance(r, g, b) {
-      const a = [r, g, b].map((v) => {
-        v /= 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-      });
+      const a = [r, g, b].map(v => v / 255 <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
       return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
     }
+
     function getContrastColor(hexColor) {
       const r = parseInt(hexColor.substr(1, 2), 16);
       const g = parseInt(hexColor.substr(3, 2), 16);
       const b = parseInt(hexColor.substr(5, 2), 16);
       return luminance(r, g, b) > 0.5 ? "#000000" : "#ffffff";
     }
+
     textInput.addEventListener("input", updateDisplay);
     fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
     fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
     lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
     fontSelector.addEventListener("input", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
+
+    copyButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(displayArea.textContent)
+        .then(() => alert("コピーしました！"))
+        .catch(() => alert("コピーに失敗しました"));
+    });
+
     updateDisplay();
     updateStyles();
-  </script>
-  <script>
-    const footerAuthor = document.getElementById("footer-author"); 
+
+    const footerAuthor = document.getElementById("footer-author");
     const hostname = window.location.hostname;
     const baseYear = 2025;
     const currentYear = new Date().getFullYear();
     const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+
     if (hostname.includes("hamuzon.github.io")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+      footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
     } else if (hostname.includes("hamusata.f5.si")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+      footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank">@hamusata</a>`;
     } else {
-      footerAuthor.innerHTML = `©️${yearText} Text Enlarger App`;
+      footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
     }
   </script>
+
 </body>
+
 </html>
