@@ -54,11 +54,7 @@ main {
   gap: 2.5rem;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+section { display: flex; flex-direction: column; gap: 1rem; }
 
 textarea#textInput {
   width: 100%;
@@ -84,7 +80,7 @@ textarea#textInput {
   box-shadow: 0 0 16px var(--color-primary);
   white-space: pre-wrap;
   word-break: break-word;
-  color: #000000;
+  color: #000;
   overflow-wrap: break-word;
   overflow-x: hidden;
   transition: all 0.2s ease;
@@ -133,9 +129,7 @@ button {
 
 .setting-item input[type=range],
 .setting-item select,
-.setting-item input[type=color] {
-  width: 100%;
-}
+.setting-item input[type=color] { width: 100%; }
 
 footer#footer {
   text-align: center;
@@ -149,9 +143,7 @@ footer#footer a {
   text-decoration: none;
 }
 
-footer#footer a:hover {
-  text-decoration: underline;
-}
+footer#footer a:hover { text-decoration: underline; }
 </style>
 </head>
 
@@ -244,7 +236,8 @@ const initialState = {
   size: "120",
   line: "1.4",
   color: "#00793d",
-  background: "#fff"
+  background: "#fff",
+  onBackground: "#1a1c19"
 };
 
 // スタイル更新
@@ -261,12 +254,17 @@ function updateStyles(){
   copyButton.style.backgroundColor = accentSelector.value;
   copyButton.style.color = getContrastColor(accentSelector.value);
 
+  // アクセント白なら出力黒背景、全体背景黒
   if(accentSelector.value.toLowerCase() === "#ffffff"){
     displayArea.style.backgroundColor = "#000";
     displayArea.style.color = "#fff";
+    document.body.style.backgroundColor = "#000";
+    document.body.style.color = "#fff";
   } else {
     displayArea.style.backgroundColor = initialState.background;
     displayArea.style.color = "#000";
+    document.body.style.backgroundColor = initialState.background;
+    document.body.style.color = initialState.onBackground;
   }
 }
 
@@ -287,8 +285,9 @@ function updateDisplay(){
   displayArea.textContent = textInput.value.trim() || "test";
 }
 
-// URL 更新（変更された値だけ）
+// URL更新 (入力ありのみ)
 function updateURLParams(){
+  const url = new URL(window.location);
   const params = new URLSearchParams();
 
   if(textInput.value !== initialState.text) params.set("text", textInput.value);
@@ -298,30 +297,22 @@ function updateURLParams(){
   if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
   if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
 
-  const url = window.location.origin + window.location.pathname + "?" + params.toString();
-  window.history.replaceState({}, "", url);
+  const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
+  window.history.replaceState({}, "", newURL);
 }
 
 // イベント
-textInput.addEventListener("input", ()=>{ updateDisplay(); saveToLocal(); updateURLParams(); });
-fontSizeSlider.addEventListener("input", ()=>{ fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontWeightSlider.addEventListener("input", ()=>{ fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-lineHeightSlider.addEventListener("input", ()=>{ lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontSelector.addEventListener("input", ()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
-accentSelector.addEventListener("input", ()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
+textInput.addEventListener("input",()=>{ updateDisplay(); saveToLocal(); updateURLParams(); });
+fontSizeSlider.addEventListener("input",()=>{ fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
+fontWeightSlider.addEventListener("input",()=>{ fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
+lineHeightSlider.addEventListener("input",()=>{ lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
+fontSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
+accentSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
 
-// Copyボタン（初期値と異なる値だけ URL に追加、順序固定）
-copyButton.addEventListener("click", ()=>{
-  const params = new URLSearchParams();
-  if(textInput.value !== initialState.text) params.set("text", textInput.value);
-  if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-
-  const url = window.location.origin + window.location.pathname + "?" + params.toString();
-  navigator.clipboard.writeText(url).then(()=>{ alert("URLコピーしました\n" + url); });
+// Copyボタン
+copyButton.addEventListener("click",()=>{
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(()=>{ alert("URLコピーしました"); });
 });
 
 // Resetボタン
@@ -359,6 +350,7 @@ function saveToLocal(){
   };
   localStorage.setItem('textAppState', JSON.stringify(state));
 }
+
 function loadFromLocal(){
   const state = JSON.parse(localStorage.getItem('textAppState')||'{}');
   if(state.text) textInput.value = state.text;
@@ -379,7 +371,7 @@ const footerAuthor = document.getElementById("footer-author");
 const hostname = window.location.hostname;
 const baseYear = 2025;
 const currentYear = new Date().getFullYear();
-const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+const yearText = currentYear>baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
 if(hostname.includes("hamuzon.github.io")){
   footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
 }else if(hostname.includes("hamusata.f5.si")){
