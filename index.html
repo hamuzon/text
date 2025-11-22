@@ -7,7 +7,6 @@
 <meta name="description" content="入力したテキストを大きく表示するアプリです。">
 <link rel="icon" href="icon-light.png" type="image/png">
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet">
 
 <style>
@@ -108,7 +107,7 @@ button {
 }
 
 #copyButton { background-color: var(--color-primary); color: #fff; }
-#resetButton { background-color: var(--color-secondary); color: #fff; }
+#resetButton { background-color: var(--color-primary); color: #fff; }
 
 #settings {
   display: flex;
@@ -159,13 +158,11 @@ footer#footer a:hover {
 <header id="appTitle">文字拡大アプリ</header>
 
 <main>
-  <!-- 入力 -->
   <section>
     <h2>入力</h2>
     <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
   </section>
 
-  <!-- 出力 -->
   <section>
     <h2>出力</h2>
     <div id="displayArea">test</div>
@@ -175,7 +172,6 @@ footer#footer a:hover {
     </div>
   </section>
 
-  <!-- 設定 -->
   <section>
     <h2>設定</h2>
     <div id="settings">
@@ -184,19 +180,16 @@ footer#footer a:hover {
         <input type="range" id="fontSizeSlider" min="40" max="1200" step="1" value="120">
         <output id="fontSizeValue">120</output>
       </div>
-
       <div class="setting-item">
         <label for="fontWeightSlider">フォント太さ</label>
         <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600">
         <output id="fontWeightValue">600</output>
       </div>
-
       <div class="setting-item">
         <label for="lineHeightSlider">行間</label>
         <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4">
         <output id="lineHeightValue">1.4</output>
       </div>
-
       <div class="setting-item">
         <label for="fontSelector">フォント選択</label>
         <select id="fontSelector">
@@ -208,7 +201,6 @@ footer#footer a:hover {
           <option value="Courier New, monospace">Courier New</option>
         </select>
       </div>
-
       <div class="setting-item">
         <label for="accentSelector">アクセントカラー</label>
         <input type="color" id="accentSelector" value="#00793d">
@@ -243,6 +235,16 @@ const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
 const copyButton = document.getElementById("copyButton");
 const resetButton = document.getElementById("resetButton");
+const footerAuthor = document.getElementById("footer-author");
+
+// ---- 初期値 ----
+const defaultState = {
+  fontSize: 120,
+  fontWeight: 600,
+  lineHeight: 1.4,
+  fontFamily: "'Noto Serif JP', serif",
+  accent: "#00793d"
+};
 
 // ---- 表示更新 ----
 function updateDisplay() {
@@ -263,6 +265,8 @@ function updateStyles() {
   header.style.color = getContrastColor(accentSelector.value);
   copyButton.style.backgroundColor = accentSelector.value;
   copyButton.style.color = getContrastColor(accentSelector.value);
+  resetButton.style.backgroundColor = accentSelector.value;
+  resetButton.style.color = getContrastColor(accentSelector.value);
 }
 
 // ---- コントラスト計算 ----
@@ -277,7 +281,7 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000000":"#ffffff";
 }
 
-// ---- URL 更新 (text優先、tも同期) ----
+// ---- URL 更新 ----
 function updateURLParams(){
   const url = new URL(window.location);
   url.searchParams.set('text', textInput.value);
@@ -303,27 +307,41 @@ copyButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(window.location.href).then(()=>{ alert("URLCopyしました"); });
 });
 
-// ---- Resetボタン ----
+// ---- Resetボタン（設定のみ初期値適用） ----
 resetButton.addEventListener("click",()=>{
-  const url = window.location.origin + window.location.pathname;
-  window.history.replaceState({}, document.title, url);
-  textInput.value = "";
-  fontSelector.value = "'Noto Serif JP', serif";
-  fontWeightSlider.value = 600;
-  fontSizeSlider.value = 120;
-  lineHeightSlider.value = 1.4;
-  accentSelector.value = "#00793d";
-  fontSizeValue.textContent = fontSizeSlider.value;
-  fontWeightValue.textContent = fontWeightSlider.value;
-  lineHeightValue.textContent = lineHeightSlider.value;
-  updateDisplay();
+  if(fontSizeSlider.value != defaultState.fontSize){
+    fontSizeSlider.value = defaultState.fontSize;
+    fontSizeValue.textContent = defaultState.fontSize;
+  }
+  if(fontWeightSlider.value != defaultState.fontWeight){
+    fontWeightSlider.value = defaultState.fontWeight;
+    fontWeightValue.textContent = defaultState.fontWeight;
+  }
+  if(lineHeightSlider.value != defaultState.lineHeight){
+    lineHeightSlider.value = defaultState.lineHeight;
+    lineHeightValue.textContent = defaultState.lineHeight;
+  }
+  if(fontSelector.value != defaultState.fontFamily){
+    fontSelector.value = defaultState.fontFamily;
+  }
+  if(accentSelector.value != defaultState.accent){
+    accentSelector.value = defaultState.accent;
+  }
   updateStyles();
-  localStorage.removeItem('textAppState');
+  saveToLocal();
+  updateURLParams();
 });
 
 // ---- ローカル保存・ロード ----
 function saveToLocal(){
-  const state={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
+  const state={
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
   localStorage.setItem('textAppState', JSON.stringify(state));
 }
 
@@ -344,7 +362,6 @@ const params = new URLSearchParams(window.location.search);
 let urlUsed = false;
 if(params.get('text') || params.get('t') || params.get('font') || params.get('weight') || params.get('size') || params.get('line') || params.get('color')){
   urlUsed = true;
-  // 最後に出る text または t を優先
   const allKeys = [];
   for(const [k,v] of params.entries()){ allKeys.push({k,v}); }
   let lastText = allKeys.reverse().find(x => x.k==="text" || x.k==="t");
@@ -360,6 +377,21 @@ if(params.get('text') || params.get('t') || params.get('font') || params.get('we
 loadFromLocal();
 updateDisplay();
 updateStyles();
+
+// ---- フッター自動設定 ----
+(function(){
+  const hostname = window.location.hostname;
+  const baseYear = 2025;
+  const currentYear = new Date().getFullYear();
+  const yearText = currentYear>baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+  if(hostname.includes("hamuzon.github.io")){
+    footerAuthor.innerHTML=`&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
+  }else if(hostname.includes("hamusata.f5.si")){
+    footerAuthor.innerHTML=`&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank">@hamusata</a>`;
+  }else{
+    footerAuthor.innerHTML=`&copy;${yearText} Text Enlargement App`;
+  }
+})();
 </script>
 </body>
 </html>
