@@ -6,8 +6,6 @@
 <title>Text Enlargement App</title>
 <meta name="description" content="入力したテキストを大きく表示するアプリです。">
 <link rel="icon" href="icon-light.png" type="image/png">
-
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet">
 
 <style>
@@ -54,7 +52,11 @@ main {
   gap: 2.5rem;
 }
 
-section { display: flex; flex-direction: column; gap: 1rem; }
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
 textarea#textInput {
   width: 100%;
@@ -80,6 +82,7 @@ textarea#textInput {
   box-shadow: 0 0 16px var(--color-primary);
   white-space: pre-wrap;
   word-break: break-word;
+  color: #000000;
   overflow-wrap: break-word;
   overflow-x: hidden;
   transition: all 0.2s ease;
@@ -102,8 +105,8 @@ button {
   transition: all 0.2s ease;
 }
 
-#copyButton { }
-#resetButton { }
+#copyButton { background-color: var(--color-primary); color: #fff; }
+#resetButton { background-color: var(--color-secondary); color: #fff; }
 
 #settings {
   display: flex;
@@ -137,7 +140,11 @@ footer#footer {
   padding: 1.5rem 0 2.5rem 0;
 }
 
-footer#footer a { color: var(--color-primary); text-decoration: none; }
+footer#footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
 footer#footer a:hover { text-decoration: underline; }
 </style>
 </head>
@@ -223,15 +230,30 @@ const accentSelector = document.getElementById("accentSelector");
 const copyButton = document.getElementById("copyButton");
 const resetButton = document.getElementById("resetButton");
 
-// 初期値
 const initialState = {
   text: "",
   font: "'Noto Serif JP', serif",
   weight: "600",
   size: "120",
   line: "1.4",
-  color: "#00793d"
+  color: "#00793d",
+  background: "#fff"
 };
+
+// コントラスト
+function luminance(r,g,b){
+  const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
+  return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+}
+function getContrastColor(hex){
+  const r=parseInt(hex.substr(1,2),16);
+  const g=parseInt(hex.substr(3,2),16);
+  const b=parseInt(hex.substr(5,2),16);
+  return luminance(r,g,b)>0.5?"#000":"#fff";
+}
+
+// 表示更新
+function updateDisplay(){ displayArea.textContent = textInput.value.trim() || "test"; }
 
 // スタイル更新
 function updateStyles(){
@@ -243,87 +265,73 @@ function updateStyles(){
   displayArea.style.borderColor = accentSelector.value;
   displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
   header.style.backgroundColor = accentSelector.value;
-  header.style.color = getContrastColor(accentSelector.value);
-  copyButton.style.backgroundColor = accentSelector.value;
-  copyButton.style.color = getContrastColor(accentSelector.value);
-  resetButton.style.backgroundColor = accentSelector.value;
-  resetButton.style.color = getContrastColor(accentSelector.value);
 
-  // アクセント白の場合は背景黒
-  if(accentSelector.value.toLowerCase() === "#ffffff"){
+  if(accentSelector.value.toLowerCase()==="#ffffff"){
     displayArea.style.backgroundColor = "#000";
     displayArea.style.color = "#fff";
     textInput.style.backgroundColor = "#000";
     textInput.style.color = "#fff";
-    document.body.style.backgroundColor = "#000";
-  } else {
-    displayArea.style.backgroundColor = "#fff";
+    header.style.color = "#fff";
+    copyButton.style.color = "#fff";
+    resetButton.style.color = "#fff";
+    document.getElementById("footer").style.color = "#00b050";
+  }else{
+    const contrast = getContrastColor(accentSelector.value);
+    header.style.color = contrast;
+    copyButton.style.color = contrast;
+    resetButton.style.color = contrast;
+    displayArea.style.backgroundColor = initialState.background;
     displayArea.style.color = "#000";
-    textInput.style.backgroundColor = "#fff";
+    textInput.style.backgroundColor = initialState.background;
     textInput.style.color = "#000";
-    document.body.style.backgroundColor = "#fff";
+    document.getElementById("footer").style.color = "var(--color-secondary)";
   }
+  copyButton.style.backgroundColor = accentSelector.value;
+  resetButton.style.backgroundColor = accentSelector.value;
 }
 
-// コントラスト計算
-function luminance(r,g,b){
-  const a = [r,g,b].map(v=>{v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
-  return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
-}
-function getContrastColor(hex){
-  const r=parseInt(hex.substr(1,2),16);
-  const g=parseInt(hex.substr(3,2),16);
-  const b=parseInt(hex.substr(5,2),16);
-  return luminance(r,g,b)>0.5?"#000":"#fff";
-}
-
-// 表示更新
-function updateDisplay(){
-  displayArea.textContent = textInput.value.trim() || "test";
-}
-
-// URL更新（入力があるときのみリアルタイム）
+// URL更新
 function updateURLParams(){
   const url = new URL(window.location);
   const params = new URLSearchParams();
+  if(textInput.value!==initialState.text) params.set("text", textInput.value);
+  if(fontSelector.value!==initialState.font) params.set("font", fontSelector.value);
+  if(fontWeightSlider.value!==initialState.weight) params.set("weight", fontWeightSlider.value);
+  if(fontSizeSlider.value!==initialState.size) params.set("size", fontSizeSlider.value);
+  if(lineHeightSlider.value!==initialState.line) params.set("line", lineHeightSlider.value);
+  if(accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()) params.set("color", accentSelector.value);
+  window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
+}
 
-  if(textInput.value) params.set("text", textInput.value);
-  if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-
-  if(textInput.value || fontSelector.value!==initialState.font || fontWeightSlider.value!==initialState.weight ||
-     fontSizeSlider.value!==initialState.size || lineHeightSlider.value!==initialState.line ||
-     accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()){
-    window.history.replaceState({}, "", url.origin + url.pathname + "?" + params.toString());
+// tパラメータをtextに反映
+function applyTtoTextParam(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const t = urlParams.get("t");
+  const text = urlParams.get("text");
+  if(t && !text){
+    textInput.value = t;
   }
 }
 
-// イベント
-textInput.addEventListener("input",()=>{ updateDisplay(); saveToLocal(); updateURLParams(); });
-fontSizeSlider.addEventListener("input",()=>{ fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontWeightSlider.addEventListener("input",()=>{ fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-lineHeightSlider.addEventListener("input",()=>{ lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
-accentSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
+textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();updateURLParams();});
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();updateURLParams();});
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();updateURLParams();});
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();updateURLParams();});
+fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();updateURLParams();});
+accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();updateURLParams();});
 
-// Copyボタン（順序固定）
+// Copy
 copyButton.addEventListener("click",()=>{
-  const params = new URLSearchParams();
-  if(textInput.value) params.set("text", textInput.value);
-  if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-
-  const url = window.location.origin + window.location.pathname + "?" + params.toString();
-  navigator.clipboard.writeText(url).then(()=>{ alert("URLコピーしました"); });
+  const url = window.location.origin + window.location.pathname + "?text=" + encodeURIComponent(textInput.value) +
+              "&font=" + encodeURIComponent(fontSelector.value) +
+              "&weight=" + encodeURIComponent(fontWeightSlider.value) +
+              "&size=" + encodeURIComponent(fontSizeSlider.value) +
+              "&line=" + encodeURIComponent(lineHeightSlider.value) +
+              "&color=" + encodeURIComponent(accentSelector.value);
+  navigator.clipboard.writeText(url).then(()=>{alert("URLコピーしました");});
 });
 
-// Resetボタン
+// Reset
 resetButton.addEventListener("click",()=>{
   textInput.value = initialState.text;
   fontSelector.value = initialState.font;
@@ -339,10 +347,7 @@ resetButton.addEventListener("click",()=>{
   updateDisplay();
   updateStyles();
   saveToLocal();
-
-  // クリアパス消去
-  const url = window.location.origin + window.location.pathname;
-  window.history.replaceState({}, "", url);
+  window.history.replaceState({}, "", window.location.pathname);
   localStorage.removeItem('textAppState');
 });
 
@@ -358,7 +363,6 @@ function saveToLocal(){
   };
   localStorage.setItem('textAppState', JSON.stringify(state));
 }
-
 function loadFromLocal(){
   const state = JSON.parse(localStorage.getItem('textAppState')||'{}');
   if(state.text) textInput.value = state.text;
@@ -370,6 +374,7 @@ function loadFromLocal(){
 }
 
 // 初期ロード
+applyTtoTextParam();
 loadFromLocal();
 updateDisplay();
 updateStyles();
