@@ -258,10 +258,11 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000000":"#ffffff";
 }
 
-// URL更新
+// URL更新 (text優先)
 function updateURLParams(){
   const url=new URL(window.location);
-  url.searchParams.set('t',textInput.value);
+  url.searchParams.set('text',textInput.value);
+  url.searchParams.set('t',textInput.value); // tも同期
   url.searchParams.set('font',fontSelector.value);
   url.searchParams.set('weight',fontWeightSlider.value);
   url.searchParams.set('size',fontSizeSlider.value);
@@ -280,7 +281,7 @@ accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();update
 
 // Copyボタン
 copyButton.addEventListener("click",()=>{
-  navigator.clipboard.writeText(displayArea.textContent).then(()=>{alert("URLCopyしました");});
+  navigator.clipboard.writeText(window.location.href).then(()=>{alert("URLCopyしました");});
 });
 
 // Resetボタン
@@ -324,7 +325,7 @@ let urlUsed=false;
 if(params.get('text')||params.get('t')||params.get('font')||params.get('weight')||params.get('size')||params.get('line')||params.get('color')){
   urlUsed=true;
   if(params.get('text')) textInput.value=params.get('text');
-  if(params.get('t')) textInput.value=params.get('t');
+  else if(params.get('t')) textInput.value=params.get('t'); // tだけある場合
   if(params.get('font')) fontSelector.value=params.get('font');
   if(params.get('weight')) fontWeightSlider.value=params.get('weight');
   if(params.get('size')) fontSizeSlider.value=params.get('size');
