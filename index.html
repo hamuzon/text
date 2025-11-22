@@ -214,10 +214,12 @@ const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
 
+// 入力・出力更新
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test";
 }
 
+// スタイル更新
 function updateStyles() {
   displayArea.style.fontSize = fontSizeSlider.value + "px";
   displayArea.style.fontWeight = fontWeightSlider.value;
@@ -230,11 +232,11 @@ function updateStyles() {
   header.style.color = getContrastColor(accentSelector.value);
 }
 
+// コントラスト計算
 function luminance(r,g,b){
   const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
   return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
 }
-
 function getContrastColor(hex){
   const r=parseInt(hex.substr(1,2),16);
   const g=parseInt(hex.substr(3,2),16);
@@ -242,14 +244,15 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000000":"#ffffff";
 }
 
-textInput.addEventListener("input",updateDisplay);
-fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();});
-fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();});
-lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();});
-fontSelector.addEventListener("input",updateStyles);
-accentSelector.addEventListener("input",updateStyles);
+// イベント
+textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();});
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();});
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();});
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();});
+fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
+accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
 
-// URL パラメータ対応
+// URLパラメータ読み込み
 const params = new URLSearchParams(window.location.search);
 if(params.get('text')) textInput.value = params.get('text');
 if(params.get('t')) textInput.value = params.get('t');
@@ -259,10 +262,35 @@ if(params.get('size')) fontSizeSlider.value = params.get('size');
 if(params.get('line')) lineHeightSlider.value = params.get('line');
 if(params.get('color')) accentSelector.value = params.get('color');
 
+// ローカルストレージに保存
+function saveToLocal(){
+  const state = {
+    text:textInput.value,
+    font: fontSelector.value,
+    weight: fontWeightSlider.value,
+    size: fontSizeSlider.value,
+    line: lineHeightSlider.value,
+    color: accentSelector.value
+  };
+  localStorage.setItem('textAppState', JSON.stringify(state));
+}
+
+// ロード
+function loadFromLocal(){
+  const state = JSON.parse(localStorage.getItem('textAppState')||'{}');
+  if(state.text) textInput.value = state.text;
+  if(state.font) fontSelector.value = state.font;
+  if(state.weight) fontWeightSlider.value = state.weight;
+  if(state.size) fontSizeSlider.value = state.size;
+  if(state.line) lineHeightSlider.value = state.line;
+  if(state.color) accentSelector.value = state.color;
+}
+
+loadFromLocal();
 updateDisplay();
 updateStyles();
 
-// フッター表示
+// フッター
 const footerAuthor=document.getElementById("footer-author");
 const hostname=window.location.hostname;
 const baseYear=2025;
