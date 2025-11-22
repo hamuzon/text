@@ -6,8 +6,6 @@
 <title>Text Enlargement App</title>
 <meta name="description" content="入力したテキストを大きく表示するアプリです。">
 <link rel="icon" href="icon-light.png" type="image/png">
-
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet">
 
 <style>
@@ -20,22 +18,21 @@
 }
 
 * { box-sizing: border-box; }
-
 body {
-  margin: 0;
-  font-family: 'Noto Serif JP', serif;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.6;
-  word-break: break-word;
+  margin:0;
+  font-family:'Noto Serif JP', serif;
+  background-color:var(--color-background);
+  color:var(--color-on-background);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  line-height:1.6;
+  word-break:break-word;
 }
 
 header {
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: #fff;
   padding: 1.5rem 1rem;
   font-weight: 700;
   font-size: clamp(1.8rem, 6vw, 2.2rem);
@@ -44,123 +41,107 @@ header {
 }
 
 main {
-  flex-grow: 1;
-  width: 100%;
-  max-width: 900px;
-  margin: 1.5rem auto;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
+  flex-grow:1;
+  width:100%;
+  max-width:900px;
+  margin:1.5rem auto;
+  padding:0 1rem;
+  display:flex;
+  flex-direction:column;
+  gap:2.5rem;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+section { display:flex; flex-direction:column; gap:1rem; }
 
 textarea#textInput {
-  width: 100%;
+  width:100%;
   font-size: clamp(1.5rem,5vw,2.5rem);
-  min-height: 140px;
-  padding: 1rem;
-  border-radius: var(--shape-corner-medium);
-  border: 2px solid var(--color-primary);
-  resize: vertical;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
+  min-height:140px;
+  padding:1rem;
+  border-radius:var(--shape-corner-medium);
+  border:2px solid var(--color-primary);
+  resize:vertical;
+  background-color:var(--color-background);
+  color:var(--color-on-background);
 }
 
 #displayArea {
-  width: 100%;
+  width:100%;
   font-size: clamp(2rem,10vw,8rem);
-  font-weight: 600;
-  line-height: 1.4;
-  padding: 1rem;
-  border-radius: var(--shape-corner-medium);
-  background-color: var(--color-background);
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 16px var(--color-primary);
-  white-space: pre-wrap;
-  word-break: break-word;
-  color: #000000;
-  overflow-wrap: break-word;
-  overflow-x: hidden;
+  font-weight:600;
+  line-height:1.4;
+  padding:1rem;
+  border-radius:var(--shape-corner-medium);
+  border:2px solid var(--color-primary);
+  box-shadow:0 0 16px var(--color-primary);
+  white-space:pre-wrap;
+  word-break:break-word;
+  color:#000;
+  overflow-wrap:break-word;
+  overflow-x:hidden;
   transition: all 0.2s ease;
 }
 
 #buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 0.5rem;
+  display:flex;
+  gap:1rem;
+  justify-content:center;
+  margin-top:0.5rem;
 }
 
 button {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border-radius: var(--shape-corner-medium);
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  padding:0.6rem 1.2rem;
+  font-size:1rem;
+  border-radius:var(--shape-corner-medium);
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  transition:all 0.2s ease;
 }
 
-#copyButton {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-#resetButton {
-  background-color: var(--color-secondary);
-  color: #fff;
-}
+#copyButton { background-color:var(--color-primary); color:#fff; }
+#resetButton { background-color:var(--color-secondary); color:#fff; }
 
 #settings {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-  align-items: flex-start;
+  display:flex;
+  flex-wrap:wrap;
+  gap:1.5rem;
+  justify-content:center;
+  align-items:flex-start;
 }
 
 .setting-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 140px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-width:140px;
 }
 
 .setting-item label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  font-weight:600;
+  margin-bottom:0.5rem;
+  text-align:center;
 }
 
 .setting-item input[type=range],
 .setting-item select,
-.setting-item input[type=color] {
-  width: 100%;
-}
+.setting-item input[type=color] { width:100%; }
 
 footer#footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--color-secondary);
-  padding: 1.5rem 0 2.5rem 0;
+  text-align:center;
+  font-size:0.85rem;
+  color:var(--color-secondary);
+  padding:1.5rem 0 2.5rem 0;
 }
 
 footer#footer a {
-  color: var(--color-primary);
-  text-decoration: none;
+  color:var(--color-primary);
+  text-decoration:none;
 }
+footer#footer a:hover { text-decoration:underline; }
 
-footer#footer a:hover {
-  text-decoration: underline;
-}
 </style>
 </head>
-
 <body>
 <header id="appTitle">文字拡大アプリ</header>
 
@@ -242,43 +223,19 @@ const accentSelector = document.getElementById("accentSelector");
 const copyButton = document.getElementById("copyButton");
 const resetButton = document.getElementById("resetButton");
 
-// 初期値
+// 初期値保持
 const initialState = {
   text: "",
   font: "'Noto Serif JP', serif",
-  weight: "600",
-  size: "120",
-  line: "1.4",
+  weight: 600,
+  size: 120,
+  line: 1.4,
   color: "#00793d"
 };
 
-// スタイル更新
-function updateStyles(){
-  displayArea.style.fontSize = fontSizeSlider.value + "px";
-  displayArea.style.fontWeight = fontWeightSlider.value;
-  displayArea.style.lineHeight = lineHeightSlider.value;
-  displayArea.style.fontFamily = fontSelector.value;
-  textInput.style.borderColor = accentSelector.value;
-  displayArea.style.borderColor = accentSelector.value;
-  displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
-  header.style.backgroundColor = accentSelector.value;
-  header.style.color = getContrastColor(accentSelector.value);
-  copyButton.style.backgroundColor = accentSelector.value;
-  copyButton.style.color = getContrastColor(accentSelector.value);
-
-  // アクセント白の場合
-  if(accentSelector.value.toLowerCase() === "#ffffff"){
-    displayArea.style.backgroundColor = "#000";
-    displayArea.style.color = "#fff";
-  } else {
-    displayArea.style.backgroundColor = initialState.background || "#fff";
-    displayArea.style.color = "#000";
-  }
-}
-
 // コントラスト計算
 function luminance(r,g,b){
-  const a = [r,g,b].map(v=>{v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
+  const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
   return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
 }
 function getContrastColor(hex){
@@ -293,35 +250,88 @@ function updateDisplay(){
   displayArea.textContent = textInput.value.trim() || "test";
 }
 
-// URL更新 (入力ありのみ)
+// スタイル更新
+function updateStyles(){
+  displayArea.style.fontSize = fontSizeSlider.value+"px";
+  displayArea.style.fontWeight = fontWeightSlider.value;
+  displayArea.style.lineHeight = lineHeightSlider.value;
+  displayArea.style.fontFamily = fontSelector.value;
+
+  textInput.style.borderColor = accentSelector.value;
+  displayArea.style.borderColor = accentSelector.value;
+  displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
+  header.style.backgroundColor = accentSelector.value;
+  header.style.color = getContrastColor(accentSelector.value);
+  copyButton.style.backgroundColor = accentSelector.value;
+  copyButton.style.color = getContrastColor(accentSelector.value);
+
+  if(accentSelector.value.toLowerCase()==="#ffffff"){
+    displayArea.style.backgroundColor="#000";
+    displayArea.style.color="#fff";
+  } else {
+    displayArea.style.backgroundColor="#fff";
+    displayArea.style.color="#000";
+  }
+}
+
+// URLクリエパス更新 (入力文字ある場合のみ)
 function updateURLParams(){
-  const url = new URL(window.location);
-  const params = new URLSearchParams();
+  if(textInput.value.trim()==="") return;
+  const url=new URL(window.location);
+  url.searchParams.set('text', textInput.value);
+  url.searchParams.set('font', fontSelector.value);
+  url.searchParams.set('weight', fontWeightSlider.value);
+  url.searchParams.set('size', fontSizeSlider.value);
+  url.searchParams.set('line', lineHeightSlider.value);
+  url.searchParams.set('color', accentSelector.value);
+  window.history.replaceState({}, '', url);
+}
 
-  // 変更された値だけ
-  if(textInput.value !== initialState.text) params.set("text", textInput.value);
-  if(fontSelector.value !== initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value !== initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value !== initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value !== initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase() !== initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-
-  const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
-  window.history.replaceState({}, "", newURL);
+// ローカル保存・ロード
+function saveToLocal(){
+  const state = {
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
+  localStorage.setItem('textAppState', JSON.stringify(state));
+}
+function loadFromLocal(){
+  const state=JSON.parse(localStorage.getItem('textAppState')||'{}');
+  if(state.text) textInput.value=state.text;
+  if(state.font) fontSelector.value=state.font;
+  if(state.weight) fontWeightSlider.value=state.weight;
+  if(state.size) fontSizeSlider.value=state.size;
+  if(state.line) lineHeightSlider.value=state.line;
+  if(state.color) accentSelector.value=state.color;
 }
 
 // イベント
-textInput.addEventListener("input",()=>{ updateDisplay(); saveToLocal(); updateURLParams(); });
-fontSizeSlider.addEventListener("input",()=>{ fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontWeightSlider.addEventListener("input",()=>{ fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-lineHeightSlider.addEventListener("input",()=>{ lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams(); });
-fontSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
-accentSelector.addEventListener("input",()=>{ updateStyles(); saveToLocal(); updateURLParams(); });
+textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();updateURLParams();});
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();updateURLParams();});
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();updateURLParams();});
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();updateURLParams();});
+fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();updateURLParams();});
+accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();updateURLParams();});
 
 // Copyボタン
 copyButton.addEventListener("click",()=>{
-  const url = window.location.href;
-  navigator.clipboard.writeText(url).then(()=>{ alert("URLコピーしました"); });
+  const url=new URL(window.location);
+  const params = url.searchParams;
+
+  // 初期値と異なる項目のみ反映
+  if(textInput.value!==initialState.text) params.set('text', textInput.value);
+  if(fontSelector.value!==initialState.font) params.set('font', fontSelector.value);
+  if(fontWeightSlider.value!=initialState.weight) params.set('weight', fontWeightSlider.value);
+  if(fontSizeSlider.value!=initialState.size) params.set('size', fontSizeSlider.value);
+  if(lineHeightSlider.value!=initialState.line) params.set('line', lineHeightSlider.value);
+  if(accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()) params.set('color', accentSelector.value);
+
+  window.history.replaceState({}, '', url);
+  navigator.clipboard.writeText(url.href).then(()=>alert("URLCopyしました"));
 });
 
 // Resetボタン
@@ -340,53 +350,25 @@ resetButton.addEventListener("click",()=>{
   updateDisplay();
   updateStyles();
   saveToLocal();
-
-  // URLクリエパス消す
-  const url = window.location.origin + window.location.pathname;
-  window.history.replaceState({}, "", url);
-  localStorage.removeItem('textAppState');
 });
-
-// ローカル保存・ロード
-function saveToLocal(){
-  const state = {
-    text: textInput.value,
-    font: fontSelector.value,
-    weight: fontWeightSlider.value,
-    size: fontSizeSlider.value,
-    line: lineHeightSlider.value,
-    color: accentSelector.value
-  };
-  localStorage.setItem('textAppState', JSON.stringify(state));
-}
-
-function loadFromLocal(){
-  const state = JSON.parse(localStorage.getItem('textAppState')||'{}');
-  if(state.text) textInput.value = state.text;
-  if(state.font) fontSelector.value = state.font;
-  if(state.weight) fontWeightSlider.value = state.weight;
-  if(state.size) fontSizeSlider.value = state.size;
-  if(state.line) lineHeightSlider.value = state.line;
-  if(state.color) accentSelector.value = state.color;
-}
 
 // 初期ロード
 loadFromLocal();
 updateDisplay();
 updateStyles();
 
-// フッター更新
-const footerAuthor = document.getElementById("footer-author");
-const hostname = window.location.hostname;
-const baseYear = 2025;
-const currentYear = new Date().getFullYear();
-const yearText = currentYear>baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+// フッター自動更新
+const footerAuthor=document.getElementById("footer-author");
+const hostname=window.location.hostname;
+const baseYear=2025;
+const currentYear=new Date().getFullYear();
+const yearText=currentYear>baseYear?`${baseYear}~${currentYear}`:`${baseYear}`;
 if(hostname.includes("hamuzon.github.io")){
-  footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
+  footerAuthor.innerHTML=`&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
 }else if(hostname.includes("hamusata.f5.si")){
-  footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank">@hamusata</a>`;
+  footerAuthor.innerHTML=`&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank">@hamusata</a>`;
 }else{
-  footerAuthor.innerHTML = `&copy;${yearText} Text Enlargement App`;
+  footerAuthor.innerHTML=`&copy;${yearText} Text Enlargement App`;
 }
 </script>
 </body>
