@@ -76,7 +76,7 @@ textarea#textInput {
 
 #displayArea {
   width: 100%;
-  font-size: clamp(2rem, 10vw, 6rem);
+  font-size: clamp(2rem, 10vw, 20rem);
   font-weight: 600;
   line-height: 1.4;
   padding: 1rem;
@@ -91,12 +91,37 @@ textarea#textInput {
   overflow-x: hidden;
 }
 
+#buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+#buttons button {
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--shape-corner-medium);
+  border: 2px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#buttons button:hover {
+  background-color: #ffffff;
+  color: var(--color-primary);
+}
+
 #settings {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
   align-items: flex-start;
+  margin-top: 1rem;
 }
 
 .setting-item {
@@ -135,6 +160,7 @@ footer#footer a:hover {
 }
 </style>
 </head>
+
 <body>
 
 <header id="appTitle">文字拡大アプリ</header>
@@ -144,12 +170,16 @@ footer#footer a:hover {
 <section>
 <h2>入力</h2>
 <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
-<!-- <button id="copyButton" onclick="copyText()">Copy</button> -->
 </section>
 
 <section>
 <h2>出力</h2>
 <div id="displayArea">test</div>
+
+<div id="buttons">
+  <button id="copyButton">Copy</button>
+  <button id="resetButton">リセット</button>
+</div>
 </section>
 
 <section>
@@ -157,19 +187,22 @@ footer#footer a:hover {
 <div id="settings">
   <div class="setting-item">
     <label for="fontSizeSlider">フォントサイズ (px)</label>
-    <input type="range" id="fontSizeSlider" min="40" max="800" step="1" value="120" />
+    <input type="range" id="fontSizeSlider" min="40" max="2000" step="1" value="120" />
     <output id="fontSizeValue">120</output>
   </div>
+
   <div class="setting-item">
     <label for="fontWeightSlider">フォント太さ</label>
     <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
     <output id="fontWeightValue">600</output>
   </div>
+
   <div class="setting-item">
     <label for="lineHeightSlider">行間</label>
     <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
     <output id="lineHeightValue">1.4</output>
   </div>
+
   <div class="setting-item">
     <label for="fontSelector">フォント選択</label>
     <select id="fontSelector">
@@ -181,6 +214,7 @@ footer#footer a:hover {
       <option value="Courier New, monospace">Courier New</option>
     </select>
   </div>
+
   <div class="setting-item">
     <label for="accentSelector">アクセントカラー</label>
     <input type="color" id="accentSelector" value="#00793d" />
@@ -213,8 +247,10 @@ const lineHeightSlider = document.getElementById("lineHeightSlider");
 const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
+const copyButton = document.getElementById("copyButton");
+const resetButton = document.getElementById("resetButton");
 
-// 入力・出力更新
+// 表示更新
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test";
 }
@@ -244,25 +280,7 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000000":"#ffffff";
 }
 
-// イベント
-textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();});
-fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();});
-fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();});
-lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();});
-fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
-accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
-
-// URLパラメータ読み込み
-const params = new URLSearchParams(window.location.search);
-if(params.get('text')) textInput.value = params.get('text');
-if(params.get('t')) textInput.value = params.get('t');
-if(params.get('font')) fontSelector.value = params.get('font');
-if(params.get('weight')) fontWeightSlider.value = params.get('weight');
-if(params.get('size')) fontSizeSlider.value = params.get('size');
-if(params.get('line')) lineHeightSlider.value = params.get('line');
-if(params.get('color')) accentSelector.value = params.get('color');
-
-// ローカルストレージに保存
+// 保存
 function saveToLocal(){
   const state = {
     text:textInput.value,
@@ -286,6 +304,45 @@ function loadFromLocal(){
   if(state.color) accentSelector.value = state.color;
 }
 
+// イベント
+textInput.addEventListener("input",()=>{updateDisplay();saveToLocal();});
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles();saveToLocal();});
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles();saveToLocal();});
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles();saveToLocal();});
+fontSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
+accentSelector.addEventListener("input",()=>{updateStyles();saveToLocal();});
+
+// Copy
+copyButton.addEventListener("click", ()=>{
+  navigator.clipboard.writeText(displayArea.textContent)
+    .then(()=>{alert("コピーしました");})
+    .catch(()=>{alert("コピー失敗");});
+});
+
+// Reset
+resetButton.addEventListener("click", ()=>{
+  textInput.value = "";
+  fontSizeSlider.value = 120;
+  fontWeightSlider.value = 600;
+  lineHeightSlider.value = 1.4;
+  fontSelector.value = "'Noto Serif JP', serif";
+  accentSelector.value = "#00793d";
+  updateDisplay();
+  updateStyles();
+  saveToLocal();
+});
+
+// URLパラメータ優先
+const params = new URLSearchParams(window.location.search);
+if(params.get('text')) textInput.value = params.get('text');
+if(params.get('t')) textInput.value = params.get('t');
+if(params.get('font')) fontSelector.value = params.get('font');
+if(params.get('weight')) fontWeightSlider.value = params.get('weight');
+if(params.get('size')) fontSizeSlider.value = params.get('size');
+if(params.get('line')) lineHeightSlider.value = params.get('line');
+if(params.get('color')) accentSelector.value = params.get('color');
+
+// ローカル保存ロード
 loadFromLocal();
 updateDisplay();
 updateStyles();
