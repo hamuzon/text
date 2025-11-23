@@ -170,7 +170,7 @@
     </section>
   </main>
   <footer id="footer">
-    <div id="footer-author">©️2025 Text enlargement app</div>
+    <div id="footer-author">&copy;2025 Text enlargement app</div>
     <div>
       使用ライブラリー:
       <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
@@ -191,9 +191,11 @@
     const lineHeightValue = document.getElementById("lineHeightValue");
     const fontSelector = document.getElementById("fontSelector");
     const accentSelector = document.getElementById("accentSelector");
+
     function updateDisplay() {
       displayArea.textContent = textInput.value.trim() || "test";
     }
+
     function updateStyles() {
       displayArea.style.fontSize = fontSizeSlider.value + "px";
       displayArea.style.fontWeight = fontWeightSlider.value;
@@ -206,6 +208,7 @@
       header.style.backgroundColor = accentSelector.value;
       header.style.color = getContrastColor(accentSelector.value);
     }
+
     function luminance(r, g, b) {
       const a = [r, g, b].map((v) => {
         v /= 255;
@@ -213,18 +216,21 @@
       });
       return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
     }
+
     function getContrastColor(hexColor) {
       const r = parseInt(hexColor.substr(1, 2), 16);
       const g = parseInt(hexColor.substr(3, 2), 16);
       const b = parseInt(hexColor.substr(5, 2), 16);
       return luminance(r, g, b) > 0.5 ? "#000000" : "#ffffff";
     }
+
     textInput.addEventListener("input", updateDisplay);
     fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
     fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
     lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
     fontSelector.addEventListener("input", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
+
     updateDisplay();
     updateStyles();
   </script>
@@ -235,11 +241,11 @@
     const currentYear = new Date().getFullYear();
     const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
     if (hostname.includes("hamuzon.github.io")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+      footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
     } else if (hostname.includes("hamusata.f5.si")) {
-      footerAuthor.innerHTML = `©️${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+      footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
     } else {
-      footerAuthor.innerHTML = `©️${yearText} Text Enlarger App`;
+      footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
     }
   </script>
 </body>
