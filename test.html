@@ -7,8 +7,8 @@
 <meta name="description" content="Text拡大appですいれたText拡大表示します" />
 <link rel="icon" href="icon-light.png" type="image/png" />
 <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
-
 <style>
+
 :root {
   --color-primary: #00793d;
   --color-primary-contrast-light: #ffffff;
@@ -33,7 +33,7 @@ header {
   color: var(--color-primary-contrast-light);
   padding: 1.5rem 2rem;
   font-weight: 700;
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: 6vw;
   letter-spacing: 0.12em;
   text-align: center;
   user-select: text;
@@ -44,7 +44,7 @@ header {
 
 main {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
   padding: 1rem;
   flex-grow: 1;
   display: flex;
@@ -118,17 +118,16 @@ textarea#textInput {
 }
 
 footer#footer {
-  background-color: var(--color-primary);
-  color: var(--color-primary-contrast-light);
   text-align: center;
-  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  font-size: clamp(0.7rem, 1.2vw, 1rem);
+  color: var(--color-secondary);
   padding: 1.5rem 0 2.5rem 0;
   user-select: text;
   font-family: 'Noto Serif JP', serif;
 }
 
 footer#footer a {
-  color: inherit;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -210,6 +209,7 @@ footer#footer a:hover {
 </footer>
 
 <script>
+
 const textInput = document.getElementById("textInput")
 const displayArea = document.getElementById("displayArea")
 const fontSizeSlider = document.getElementById("fontSizeSlider")
@@ -221,7 +221,6 @@ const lineHeightValue = document.getElementById("lineHeightValue")
 const fontSelector = document.getElementById("fontSelector")
 const accentSelector = document.getElementById("accentSelector")
 const header = document.getElementById("appTitle")
-const footer = document.getElementById("footer")
 
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test"
@@ -238,8 +237,6 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   header.style.color = getContrastColor(accentSelector.value)
-  footer.style.backgroundColor = accentSelector.value
-  footer.style.color = getContrastColor(accentSelector.value)
 }
 
 function luminance(r,g,b) {
@@ -277,6 +274,7 @@ if(hostname.includes("hamuzon.github.io")) {
 } else {
   footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`
 }
+
 </script>
 
 </body>
