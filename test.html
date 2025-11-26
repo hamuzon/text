@@ -44,7 +44,7 @@ header {
 
 main {
   max-width: 900px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto;
   padding: 1rem;
   flex-grow: 1;
   display: flex;
@@ -118,16 +118,17 @@ textarea#textInput {
 }
 
 footer#footer {
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrast-light);
   text-align: center;
-  font-size: clamp(0.7rem, 1.2vw, 1rem);
-  color: var(--color-secondary);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
   padding: 1.5rem 0 2.5rem 0;
   user-select: text;
   font-family: 'Noto Serif JP', serif;
 }
 
 footer#footer a {
-  color: var(--color-primary);
+  color: inherit;
   text-decoration: none;
 }
 
@@ -220,6 +221,7 @@ const lineHeightValue = document.getElementById("lineHeightValue")
 const fontSelector = document.getElementById("fontSelector")
 const accentSelector = document.getElementById("accentSelector")
 const header = document.getElementById("appTitle")
+const footer = document.getElementById("footer")
 
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test"
@@ -236,6 +238,8 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   header.style.color = getContrastColor(accentSelector.value)
+  footer.style.backgroundColor = accentSelector.value
+  footer.style.color = getContrastColor(accentSelector.value)
 }
 
 function luminance(r,g,b) {
