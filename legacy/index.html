@@ -12,7 +12,6 @@
 :root {
   --color-primary: #00793d;
   --color-primary-contrast-light: #ffffff;
-  --color-primary-contrast-dark: #000000;
   --color-secondary: #4a6354;
   --color-background: #ffffff;
   --color-on-background: #1a1c19;
@@ -38,7 +37,6 @@ header {
   letter-spacing: 0.12em;
   text-align: center;
   user-select: text;
-  transition: color 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -214,7 +212,6 @@ footer#footer a:hover {
 
 const textInput = document.getElementById("textInput")
 const displayArea = document.getElementById("displayArea")
-const header = document.getElementById("appTitle")
 const fontSizeSlider = document.getElementById("fontSizeSlider")
 const fontSizeValue = document.getElementById("fontSizeValue")
 const fontWeightSlider = document.getElementById("fontWeightSlider")
@@ -223,6 +220,7 @@ const lineHeightSlider = document.getElementById("lineHeightSlider")
 const lineHeightValue = document.getElementById("lineHeightValue")
 const fontSelector = document.getElementById("fontSelector")
 const accentSelector = document.getElementById("accentSelector")
+const header = document.getElementById("appTitle")
 
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test"
@@ -239,7 +237,6 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   header.style.color = getContrastColor(accentSelector.value)
-  fitHeader()
 }
 
 function luminance(r,g,b) {
@@ -254,23 +251,12 @@ function getContrastColor(hexColor) {
   return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff"
 }
 
-function fitHeader() {
-  const containerWidth = header.clientWidth - 10
-  let fontSize = parseInt(getComputedStyle(header).fontSize)
-  header.style.fontSize = fontSize + "px"
-  while(header.scrollWidth > containerWidth && fontSize > 10){
-    fontSize -= 1
-    header.style.fontSize = fontSize + "px"
-  }
-}
-
 textInput.addEventListener("input", updateDisplay)
 fontSizeSlider.addEventListener("input", () => {fontSizeValue.textContent = fontSizeSlider.value; updateStyles()})
 fontWeightSlider.addEventListener("input", () => {fontWeightValue.textContent = fontWeightSlider.value; updateStyles()})
 lineHeightSlider.addEventListener("input", () => {lineHeightValue.textContent = lineHeightSlider.value; updateStyles()})
 fontSelector.addEventListener("input", updateStyles)
 accentSelector.addEventListener("input", updateStyles)
-window.addEventListener("resize", fitHeader)
 
 updateDisplay()
 updateStyles()
