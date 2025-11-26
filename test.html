@@ -7,8 +7,8 @@
 <meta name="description" content="Text拡大appですいれたText拡大表示します" />
 <link rel="icon" href="icon-light.png" type="image/png" />
 <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
-<style>
 
+<style>
 :root {
   --color-primary: #00793d;
   --color-primary-contrast-light: #ffffff;
@@ -33,7 +33,7 @@ header {
   color: var(--color-primary-contrast-light);
   padding: 1.5rem 2rem;
   font-weight: 700;
-  font-size: 6vw;
+  font-size: clamp(2rem, 6vw, 4rem);
   letter-spacing: 0.12em;
   text-align: center;
   user-select: text;
@@ -209,7 +209,6 @@ footer#footer a:hover {
 </footer>
 
 <script>
-
 const textInput = document.getElementById("textInput")
 const displayArea = document.getElementById("displayArea")
 const fontSizeSlider = document.getElementById("fontSizeSlider")
@@ -274,7 +273,6 @@ if(hostname.includes("hamuzon.github.io")) {
 } else {
   footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`
 }
-
 </script>
 
 </body>
