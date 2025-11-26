@@ -6,9 +6,8 @@
 <title>Text enlargement app</title>
 <meta name="description" content="Text拡大appですいれたText拡大表示します" />
 <link rel="icon" href="icon-light.png" type="image/png" />
-<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&family=Sawarabi+Mincho&display=swap" rel="stylesheet" />
 <style>
-
 :root {
   --color-primary: #00793d;
   --color-primary-contrast-light: #ffffff;
@@ -33,8 +32,6 @@ header {
   color: var(--color-primary-contrast-light);
   padding: 1.5rem 2rem;
   font-weight: 700;
-  font-size: 6vw;
-  letter-spacing: 0.12em;
   text-align: center;
   user-select: text;
   white-space: nowrap;
@@ -134,7 +131,6 @@ footer#footer a {
 footer#footer a:hover {
   text-decoration: underline;
 }
-
 </style>
 </head>
 <body>
@@ -209,7 +205,7 @@ footer#footer a:hover {
 </footer>
 
 <script>
-
+// --- DOM Elements ---
 const textInput = document.getElementById("textInput")
 const displayArea = document.getElementById("displayArea")
 const fontSizeSlider = document.getElementById("fontSizeSlider")
@@ -222,6 +218,7 @@ const fontSelector = document.getElementById("fontSelector")
 const accentSelector = document.getElementById("accentSelector")
 const header = document.getElementById("appTitle")
 
+// --- Display & Style Update ---
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test"
 }
@@ -239,11 +236,11 @@ function updateStyles() {
   header.style.color = getContrastColor(accentSelector.value)
 }
 
+// --- Contrast Color ---
 function luminance(r,g,b) {
   const a = [r,g,b].map(v => {v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)})
   return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2]
 }
-
 function getContrastColor(hexColor) {
   const r = parseInt(hexColor.substr(1,2),16)
   const g = parseInt(hexColor.substr(3,2),16)
@@ -251,6 +248,7 @@ function getContrastColor(hexColor) {
   return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff"
 }
 
+// --- Event Listeners ---
 textInput.addEventListener("input", updateDisplay)
 fontSizeSlider.addEventListener("input", () => {fontSizeValue.textContent = fontSizeSlider.value; updateStyles()})
 fontWeightSlider.addEventListener("input", () => {fontWeightValue.textContent = fontWeightSlider.value; updateStyles()})
@@ -261,6 +259,7 @@ accentSelector.addEventListener("input", updateStyles)
 updateDisplay()
 updateStyles()
 
+// --- Footer Author ---
 const footerAuthor = document.getElementById("footer-author")
 const hostname = window.location.hostname
 const baseYear = 2025
@@ -275,6 +274,39 @@ if(hostname.includes("hamuzon.github.io")) {
   footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`
 }
 
+// --- Header Auto Font Size ---
+function fitHeaderText() {
+  const parentWidth = header.clientWidth - 20
+  const text = header.textContent
+  let fontSize = 100
+
+  const testSpan = document.createElement("span")
+  testSpan.style.visibility = "hidden"
+  testSpan.style.whiteSpace = "nowrap"
+  testSpan.style.position = "absolute"
+  testSpan.style.fontFamily = getComputedStyle(header).fontFamily
+  document.body.appendChild(testSpan)
+
+  testSpan.textContent = text
+
+  while (fontSize > 10) {
+    testSpan.style.fontSize = fontSize + "px"
+    if (testSpan.offsetWidth <= parentWidth) break
+    fontSize -= 1
+  }
+
+  header.style.fontSize = fontSize + "px"
+  document.body.removeChild(testSpan)
+}
+
+// 初期実行
+fitHeaderText()
+
+// ウィンドウリサイズで再計算
+window.addEventListener("resize", fitHeaderText)
+
+// ヘッダー文字変更時も再計算
+new MutationObserver(fitHeaderText).observe(header, { childList: true, characterData: true, subtree: true })
 </script>
 
 </body>
