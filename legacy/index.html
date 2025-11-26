@@ -239,6 +239,7 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   header.style.color = getContrastColor(accentSelector.value)
+  fitHeader()
 }
 
 function luminance(r,g,b) {
@@ -253,12 +254,23 @@ function getContrastColor(hexColor) {
   return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff"
 }
 
+function fitHeader() {
+  const containerWidth = header.clientWidth - 10
+  let fontSize = parseInt(getComputedStyle(header).fontSize)
+  header.style.fontSize = fontSize + "px"
+  while(header.scrollWidth > containerWidth && fontSize > 10){
+    fontSize -= 1
+    header.style.fontSize = fontSize + "px"
+  }
+}
+
 textInput.addEventListener("input", updateDisplay)
 fontSizeSlider.addEventListener("input", () => {fontSizeValue.textContent = fontSizeSlider.value; updateStyles()})
 fontWeightSlider.addEventListener("input", () => {fontWeightValue.textContent = fontWeightSlider.value; updateStyles()})
 lineHeightSlider.addEventListener("input", () => {lineHeightValue.textContent = lineHeightSlider.value; updateStyles()})
 fontSelector.addEventListener("input", updateStyles)
 accentSelector.addEventListener("input", updateStyles)
+window.addEventListener("resize", fitHeader)
 
 updateDisplay()
 updateStyles()
