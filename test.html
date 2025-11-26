@@ -30,13 +30,13 @@ body {
 header {
   background-color: var(--color-primary);
   color: var(--color-primary-contrast-light);
-  padding: 1.5rem 2rem;
   font-weight: 700;
   text-align: center;
   user-select: text;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 2rem;
 }
 
 main {
@@ -46,34 +46,33 @@ main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2rem;
   min-width: 320px;
 }
 
 textarea#textInput {
   width: 100%;
-  min-height: 140px;
-  font-size: 40px;
+  min-height: 120px;
+  font-size: 1.2rem;
   font-family: inherit;
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: var(--shape-corner-medium);
   border: 2px solid var(--color-primary);
   resize: vertical;
   box-sizing: border-box;
   color: var(--color-on-background);
   background-color: var(--color-background);
-  transition: border-color 0.3s ease;
   user-select: text;
 }
 
 #displayArea {
   width: 100%;
-  min-height: 200px;
+  min-height: 180px;
   font-weight: 600;
-  font-size: var(--font-size, 120px);
-  line-height: var(--line-height, 1.4);
+  font-size: 1.5rem;
+  line-height: 1.4;
   color: #000000;
-  padding: 0.8rem 0;
+  padding: 0.8rem;
   border-radius: var(--shape-corner-medium);
   background-color: var(--color-background);
   box-shadow: 0 0 12px var(--color-primary);
@@ -81,8 +80,6 @@ textarea#textInput {
   word-break: break-word;
   user-select: text;
   border: 2px solid var(--color-primary);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: 'Noto Serif JP', serif;
 }
 
 #settings {
@@ -116,7 +113,7 @@ textarea#textInput {
 
 footer#footer {
   text-align: center;
-  font-size: clamp(0.7rem, 1.2vw, 1rem);
+  font-size: clamp(0.7rem, 1rem, 1rem);
   color: var(--color-secondary);
   padding: 1.5rem 0 2.5rem 0;
   user-select: text;
@@ -155,7 +152,7 @@ footer#footer a:hover {
 
 <div class="setting-item">
 <label for="fontSizeSlider">フォントサイズ (px)</label>
-<input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
+<input type="range" id="fontSizeSlider" min="40" max="200" step="1" value="120" />
 <output id="fontSizeValue">120</output>
 </div>
 
@@ -205,108 +202,56 @@ footer#footer a:hover {
 </footer>
 
 <script>
-// --- DOM Elements ---
-const textInput = document.getElementById("textInput")
-const displayArea = document.getElementById("displayArea")
-const fontSizeSlider = document.getElementById("fontSizeSlider")
-const fontSizeValue = document.getElementById("fontSizeValue")
-const fontWeightSlider = document.getElementById("fontWeightSlider")
-const fontWeightValue = document.getElementById("fontWeightValue")
-const lineHeightSlider = document.getElementById("lineHeightSlider")
-const lineHeightValue = document.getElementById("lineHeightValue")
-const fontSelector = document.getElementById("fontSelector")
-const accentSelector = document.getElementById("accentSelector")
-const header = document.getElementById("appTitle")
+const textInput=document.getElementById("textInput")
+const displayArea=document.getElementById("displayArea")
+const fontSizeSlider=document.getElementById("fontSizeSlider")
+const fontSizeValue=document.getElementById("fontSizeValue")
+const fontWeightSlider=document.getElementById("fontWeightSlider")
+const fontWeightValue=document.getElementById("fontWeightValue")
+const lineHeightSlider=document.getElementById("lineHeightSlider")
+const lineHeightValue=document.getElementById("lineHeightValue")
+const fontSelector=document.getElementById("fontSelector")
+const accentSelector=document.getElementById("accentSelector")
+const header=document.getElementById("appTitle")
 
-// --- Display & Style Update ---
-function updateDisplay() {
-  displayArea.textContent = textInput.value.trim() || "test"
+function updateDisplay(){
+displayArea.textContent=textInput.value.trim()||"test"
 }
 
-function updateStyles() {
-  displayArea.style.fontSize = fontSizeSlider.value + "px"
-  displayArea.style.fontWeight = fontWeightSlider.value
-  displayArea.style.lineHeight = lineHeightSlider.value
-  displayArea.style.fontFamily = fontSelector.value
-  displayArea.style.color = "#000000"
-  textInput.style.borderColor = accentSelector.value
-  displayArea.style.borderColor = accentSelector.value
-  displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
-  header.style.backgroundColor = accentSelector.value
-  header.style.color = getContrastColor(accentSelector.value)
+function updateStyles(){
+displayArea.style.fontSize=fontSizeSlider.value+"px"
+displayArea.style.fontWeight=fontWeightSlider.value
+displayArea.style.lineHeight=lineHeightSlider.value
+displayArea.style.fontFamily=fontSelector.value
+displayArea.style.color="#000000"
+textInput.style.borderColor=accentSelector.value
+displayArea.style.borderColor=accentSelector.value
+displayArea.style.boxShadow=`0 0 12px ${accentSelector.value}`
+header.style.backgroundColor=accentSelector.value
 }
 
-// --- Contrast Color ---
-function luminance(r,g,b) {
-  const a = [r,g,b].map(v => {v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)})
-  return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2]
-}
-function getContrastColor(hexColor) {
-  const r = parseInt(hexColor.substr(1,2),16)
-  const g = parseInt(hexColor.substr(3,2),16)
-  const b = parseInt(hexColor.substr(5,2),16)
-  return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff"
+function adjustHeaderHeight(){
+const parentWidth=header.parentElement.clientWidth
+const textLength=header.textContent.length
+const basePadding=20
+const calculatedPadding=Math.max(basePadding,parentWidth/(textLength*1.5))
+header.style.paddingTop=calculatedPadding+"px"
+header.style.paddingBottom=calculatedPadding+"px"
 }
 
-// --- Event Listeners ---
-textInput.addEventListener("input", updateDisplay)
-fontSizeSlider.addEventListener("input", () => {fontSizeValue.textContent = fontSizeSlider.value; updateStyles()})
-fontWeightSlider.addEventListener("input", () => {fontWeightValue.textContent = fontWeightSlider.value; updateStyles()})
-lineHeightSlider.addEventListener("input", () => {lineHeightValue.textContent = lineHeightSlider.value; updateStyles()})
-fontSelector.addEventListener("input", updateStyles)
-accentSelector.addEventListener("input", updateStyles)
+textInput.addEventListener("input",updateDisplay)
+fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value;updateStyles()})
+fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value;updateStyles()})
+lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value;updateStyles()})
+fontSelector.addEventListener("input",updateStyles)
+accentSelector.addEventListener("input",updateStyles)
 
 updateDisplay()
 updateStyles()
+adjustHeaderHeight()
 
-// --- Footer Author ---
-const footerAuthor = document.getElementById("footer-author")
-const hostname = window.location.hostname
-const baseYear = 2025
-const currentYear = new Date().getFullYear()
-const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`
-
-if(hostname.includes("hamuzon.github.io")) {
-  footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`
-} else if(hostname.includes("hamusata.f5.si")) {
-  footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`
-} else {
-  footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`
-}
-
-// --- Header Auto Font Size ---
-function fitHeaderText() {
-  const parentWidth = header.clientWidth - 20
-  const text = header.textContent
-  let fontSize = 100
-
-  const testSpan = document.createElement("span")
-  testSpan.style.visibility = "hidden"
-  testSpan.style.whiteSpace = "nowrap"
-  testSpan.style.position = "absolute"
-  testSpan.style.fontFamily = getComputedStyle(header).fontFamily
-  document.body.appendChild(testSpan)
-
-  testSpan.textContent = text
-
-  while (fontSize > 10) {
-    testSpan.style.fontSize = fontSize + "px"
-    if (testSpan.offsetWidth <= parentWidth) break
-    fontSize -= 1
-  }
-
-  header.style.fontSize = fontSize + "px"
-  document.body.removeChild(testSpan)
-}
-
-// 初期実行
-fitHeaderText()
-
-// ウィンドウリサイズで再計算
-window.addEventListener("resize", fitHeaderText)
-
-// ヘッダー文字変更時も再計算
-new MutationObserver(fitHeaderText).observe(header, { childList: true, characterData: true, subtree: true })
+window.addEventListener("resize",adjustHeaderHeight)
+new MutationObserver(adjustHeaderHeight).observe(header,{childList:true,characterData:true,subtree:true})
 </script>
 
 </body>
