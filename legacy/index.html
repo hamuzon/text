@@ -7,6 +7,7 @@
   <meta name="description" content="Text拡大appですいれたText拡大表示します" />
   <link rel="icon" href="icon-light.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --color-primary: #00793d;
@@ -17,6 +18,7 @@
       --color-on-background: #1a1c19;
       --shape-corner-medium: 12px;
     }
+
     body {
       margin: 0;
       font-family: 'Noto Serif JP', serif;
@@ -26,10 +28,11 @@
       display: flex;
       flex-direction: column;
     }
+
     header {
       background-color: var(--color-primary);
       color: var(--header-text-color);
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       font-weight: 700;
       font-size: 2.2rem;
       letter-spacing: 0.12em;
@@ -37,9 +40,10 @@
       user-select: text;
       transition: color 0.3s ease;
     }
+
     main {
       max-width: 900px;
-      margin: 0 auto 2rem auto;
+      margin: 1rem auto 2rem auto;
       padding: 0 1rem;
       flex-grow: 1;
       display: flex;
@@ -47,6 +51,11 @@
       gap: 2rem;
       min-width: 320px;
     }
+
+    section h2 {
+      margin-bottom: 0.8rem;
+    }
+
     textarea#textInput {
       width: 100%;
       min-height: 120px;
@@ -62,6 +71,7 @@
       transition: border-color 0.3s ease;
       user-select: text;
     }
+
     #displayArea {
       width: 100%;
       min-height: 180px;
@@ -69,7 +79,7 @@
       font-size: var(--font-size, 120px);
       line-height: var(--line-height, 1.4);
       color: #000000;
-      padding: 0.6rem 0;
+      padding: 0.6rem 1rem;
       border-radius: var(--shape-corner-medium);
       background-color: var(--color-background);
       box-shadow: 0 0 12px var(--color-primary);
@@ -80,24 +90,28 @@
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
       font-family: 'Noto Serif JP', serif;
     }
+
     #settings {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem;
+      gap: 1.5rem;
       justify-content: center;
       align-items: flex-start;
     }
+
     .setting-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 120px;
+      min-width: 140px;
     }
+
     .setting-item label {
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
       text-align: center;
     }
+
     .setting-item input[type=range],
     .setting-item select,
     .setting-item input[type=color],
@@ -105,34 +119,41 @@
       width: 100%;
       box-sizing: border-box;
     }
+
     footer#footer {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: clamp(12px, 1.5vw, 18px);
       color: var(--color-secondary);
-      padding: 1rem 0 2rem 0;
+      padding: 1.2rem 0 2rem 0;
       user-select: text;
       font-family: 'Noto Serif JP', serif;
     }
+
     footer#footer a {
       color: var(--color-primary);
       text-decoration: none;
     }
+
     footer#footer a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <header id="appTitle">文字拡大アプリ</header>
+
   <main>
     <section>
       <h2>入力</h2>
       <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
     </section>
+
     <section>
       <h2>出力</h2>
       <div id="displayArea">test</div>
     </section>
+
     <section>
       <h2>設定</h2>
       <div id="settings">
@@ -141,16 +162,19 @@
           <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
           <output id="fontSizeValue">120</output>
         </div>
+
         <div class="setting-item">
           <label for="fontWeightSlider">フォント太さ</label>
           <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
           <output id="fontWeightValue">600</output>
         </div>
+
         <div class="setting-item">
           <label for="lineHeightSlider">行間</label>
           <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
           <output id="lineHeightValue">1.4</output>
         </div>
+
         <div class="setting-item">
           <label for="fontSelector">フォント選択</label>
           <select id="fontSelector">
@@ -162,6 +186,7 @@
             <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
+
         <div class="setting-item">
           <label for="accentSelector">アクセントカラー</label>
           <input type="color" id="accentSelector" value="#00793d" />
@@ -169,6 +194,7 @@
       </div>
     </section>
   </main>
+
   <footer id="footer">
     <div id="footer-author">&copy;2025 Text enlargement app</div>
     <div>
@@ -179,6 +205,7 @@
       <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
     </div>
   </footer>
+
   <script>
     const textInput = document.getElementById("textInput");
     const displayArea = document.getElementById("displayArea");
@@ -225,21 +252,32 @@
     }
 
     textInput.addEventListener("input", updateDisplay);
-    fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
-    fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
-    lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
+    fontSizeSlider.addEventListener("input", () => { 
+      fontSizeValue.textContent = fontSizeSlider.value; 
+      updateStyles(); 
+    });
+    fontWeightSlider.addEventListener("input", () => { 
+      fontWeightValue.textContent = fontWeightSlider.value; 
+      updateStyles(); 
+    });
+    lineHeightSlider.addEventListener("input", () => { 
+      lineHeightValue.textContent = lineHeightSlider.value; 
+      updateStyles(); 
+    });
     fontSelector.addEventListener("input", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
 
     updateDisplay();
     updateStyles();
   </script>
+
   <script>
     const footerAuthor = document.getElementById("footer-author"); 
     const hostname = window.location.hostname;
     const baseYear = 2025;
     const currentYear = new Date().getFullYear();
     const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+
     if (hostname.includes("hamuzon.github.io")) {
       footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
     } else if (hostname.includes("hamusata.f5.si")) {
