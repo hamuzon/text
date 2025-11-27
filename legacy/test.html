@@ -29,7 +29,7 @@ body {
 }
 
 header {
-  background-color: var(--color-primary);
+  /* 修正: 背景色を削除。#header-contentに移動 */
   color: var(--color-primary-contrast-light);
   padding: 0;
   user-select: text;
@@ -38,7 +38,14 @@ header {
 #header-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 1rem; /* mainのsectionのpaddingに合わせ、左右を1remに変更 */
+  padding: 1.5rem 1rem;
+  
+  /* 修正: 背景色と角丸を追加して帯にする */
+  background-color: var(--color-primary);
+  border-bottom-left-radius: var(--shape-corner-medium); 
+  border-bottom-right-radius: var(--shape-corner-medium);
+  /* ---------------------- */
+
   font-weight: 700;
   font-size: 6vw; 
   letter-spacing: 0.12em;
@@ -51,7 +58,7 @@ header {
 main {
   max-width: 900px;
   margin: 0 auto 2rem auto;
-  padding: 1rem 0; /* 👈 修正: 左右のpaddingを0に */
+  padding: 1rem 0; 
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -60,7 +67,7 @@ main {
 }
 
 main > section {
-  padding: 0 1rem; /* 👈 新規追加: mainの左右paddingをsectionに移動 */
+  padding: 0 1rem;
   box-sizing: border-box;
 }
 
@@ -140,7 +147,7 @@ footer#footer {
 #footer-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 2.5rem 1rem; /* 👈 修正: 左右のpaddingを1remに */
+  padding: 1.5rem 1rem 2.5rem 1rem; 
 }
 
 footer#footer a {
@@ -258,7 +265,9 @@ function updateStyles() {
   textInput.style.borderColor = accentSelector.value
   displayArea.style.borderColor = accentSelector.value
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
-  header.style.backgroundColor = accentSelector.value
+  
+  // 修正: header全体ではなく#header-contentの背景色を更新
+  headerContent.style.backgroundColor = accentSelector.value
   headerContent.style.color = getContrastColor(accentSelector.value)
 }
 
