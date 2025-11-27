@@ -127,9 +127,15 @@ footer#footer {
   text-align: center;
   font-size: clamp(0.7rem, 1.2vw, 1rem);
   color: var(--color-secondary);
-  padding: 1.5rem 0 2.5rem 0;
+  padding: 0; /* paddingをcontentに移動 */
   user-select: text;
   font-family: 'Noto Serif JP', serif;
+}
+
+#footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 0 2.5rem 0; /* 元のfooterのpaddingを適用 */
 }
 
 footer#footer a {
@@ -206,14 +212,16 @@ footer#footer a:hover {
 </main>
 
 <footer id="footer">
-<div id="footer-author">&copy;2025 Text enlargement app</div>
-<div>
-使用ライブラリー:
-<a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
-<a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>,
-<a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">Vanilla JavaScript</a>,
-<a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
-</div>
+    <div id="footer-content">
+        <div id="footer-author">&copy;2025 Text enlargement app</div>
+        <div>
+        使用ライブラリー:
+        <a href="https://developer.mozilla.org/ja/docs/Web/HTML" target="_blank" rel="noopener noreferrer">HTML5</a>,
+        <a href="https://developer.mozilla.org/ja/docs/Web/CSS" target="_blank" rel="noopener noreferrer">CSS3</a>,
+        <a href="https://developer.mozilla.org/ja/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">Vanilla JavaScript</a>,
+        <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
+        </div>
+    </div>
 </footer>
 
 <script>
@@ -230,6 +238,7 @@ const fontSelector = document.getElementById("fontSelector")
 const accentSelector = document.getElementById("accentSelector")
 const header = document.getElementById("appTitle")
 const headerContent = document.getElementById("header-content")
+const footerContent = document.getElementById("footer-content")
 
 function updateDisplay() {
   displayArea.textContent = textInput.value.trim() || "test"
@@ -246,6 +255,7 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   headerContent.style.color = getContrastColor(accentSelector.value)
+  // フッターの背景色は変更しないため、特に処理は不要
 }
 
 function luminance(r,g,b) {
