@@ -38,7 +38,7 @@ header {
 #header-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 1rem; /* mainのsectionのpaddingに合わせ、左右を1remに変更 */
   font-weight: 700;
   font-size: 6vw; 
   letter-spacing: 0.12em;
@@ -51,12 +51,17 @@ header {
 main {
   max-width: 900px;
   margin: 0 auto 2rem auto;
-  padding: 1rem;
+  padding: 1rem 0; /* 👈 修正: 左右のpaddingを0に */
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
   min-width: 320px;
+}
+
+main > section {
+  padding: 0 1rem; /* 👈 新規追加: mainの左右paddingをsectionに移動 */
+  box-sizing: border-box;
 }
 
 textarea#textInput {
@@ -127,7 +132,7 @@ footer#footer {
   text-align: center;
   font-size: clamp(0.7rem, 1.2vw, 1rem);
   color: var(--color-secondary);
-  padding: 0; /* paddingをcontentに移動 */
+  padding: 0; 
   user-select: text;
   font-family: 'Noto Serif JP', serif;
 }
@@ -135,7 +140,7 @@ footer#footer {
 #footer-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 0 2.5rem 0; /* 元のfooterのpaddingを適用 */
+  padding: 1.5rem 1rem 2.5rem 1rem; /* 👈 修正: 左右のpaddingを1remに */
 }
 
 footer#footer a {
@@ -255,7 +260,6 @@ function updateStyles() {
   displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`
   header.style.backgroundColor = accentSelector.value
   headerContent.style.color = getContrastColor(accentSelector.value)
-  // フッターの背景色は変更しないため、特に処理は不要
 }
 
 function luminance(r,g,b) {
