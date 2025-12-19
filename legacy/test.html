@@ -189,7 +189,6 @@
             <option value="Arial, sans-serif">Arial</option>
             <option value="Verdana, sans-serif">Verdana</option>
             <option value="Courier New, monospace">Courier New</option>
-            <!-- 追加おすすめフォント -->
             <option value="'Kosugi Maru', sans-serif">Kosugi Maru</option>
             <option value="'Kiwi Maru', serif">Kiwi Maru</option>
             <option value="'M PLUS Rounded 1c', sans-serif">M PLUS Rounded 1c</option>
@@ -219,17 +218,17 @@
   </footer>
 
   <script>
-    const textInput = document.getElementById("textInput");
-    const displayArea = document.getElementById("displayArea");
-    const fontSizeSlider = document.getElementById("fontSizeSlider");
-    const fontSizeValue = document.getElementById("fontSizeValue");
+    const textInput        = document.getElementById("textInput");
+    const displayArea      = document.getElementById("displayArea");
+    const fontSizeSlider   = document.getElementById("fontSizeSlider");
+    const fontSizeValue    = document.getElementById("fontSizeValue");
     const fontWeightSlider = document.getElementById("fontWeightSlider");
-    const fontWeightValue = document.getElementById("fontWeightValue");
+    const fontWeightValue  = document.getElementById("fontWeightValue");
     const lineHeightSlider = document.getElementById("lineHeightSlider");
-    const lineHeightValue = document.getElementById("lineHeightValue");
-    const fontSelector = document.getElementById("fontSelector");
-    const accentSelector = document.getElementById("accentSelector");
-    const header = document.getElementById("appTitle");
+    const lineHeightValue  = document.getElementById("lineHeightValue");
+    const fontSelector     = document.getElementById("fontSelector");
+    const accentSelector   = document.getElementById("accentSelector");
+    const header           = document.getElementById("appTitle");
 
     function updateDisplay() {
       displayArea.textContent = textInput.value.trim() || "test";
@@ -237,34 +236,52 @@
     }
 
     function updateStyles() {
-      displayArea.style.fontSize = fontSizeSlider.value + "px";
+      displayArea.style.fontSize   = fontSizeSlider.value + "px";
       displayArea.style.fontWeight = fontWeightSlider.value;
       displayArea.style.lineHeight = lineHeightSlider.value;
       displayArea.style.fontFamily = fontSelector.value;
-      displayArea.style.color = "#000000";
-      textInput.style.borderColor = accentSelector.value;
+      displayArea.style.color      = "#000000";
+
+      textInput.style.borderColor   = accentSelector.value;
       displayArea.style.borderColor = accentSelector.value;
-      displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`;
+      displayArea.style.boxShadow   = `0 0 12px ${accentSelector.value}`;
+
       header.style.backgroundColor = accentSelector.value;
-      header.style.color = getContrastColor(accentSelector.value);
+      header.style.color           = getContrastColor(accentSelector.value);
     }
 
     function luminance(r, g, b) {
-      const a = [r, g, b].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+      const a = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055)/1.055, 2.4);
+      });
       return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
     }
 
     function getContrastColor(hexColor) {
-      const r = parseInt(hexColor.substr(1, 2), 16);
-      const g = parseInt(hexColor.substr(3, 2), 16);
-      const b = parseInt(hexColor.substr(5, 2), 16);
-      return luminance(r, g, b) > 0.5 ? "#000000" : "#ffffff";
+      const r = parseInt(hexColor.substr(1,2),16);
+      const g = parseInt(hexColor.substr(3,2),16);
+      const b = parseInt(hexColor.substr(5,2),16);
+      return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff";
     }
 
     textInput.addEventListener("input", updateDisplay);
-    fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
-    fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
-    lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
+
+    fontSizeSlider.addEventListener("input", () => {
+      fontSizeValue.textContent = fontSizeSlider.value;
+      updateStyles();
+    });
+
+    fontWeightSlider.addEventListener("input", () => {
+      fontWeightValue.textContent = fontWeightSlider.value;
+      updateStyles();
+    });
+
+    lineHeightSlider.addEventListener("input", () => {
+      lineHeightValue.textContent = lineHeightSlider.value;
+      updateStyles();
+    });
+
     fontSelector.addEventListener("input", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
 
@@ -272,14 +289,14 @@
     updateStyles();
 
     const footerAuthor = document.getElementById("footer-author");
-    const hostname = window.location.hostname;
-    const baseYear = 2025;
-    const currentYear = new Date().getFullYear();
-    const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+    const hostname     = window.location.hostname;
+    const baseYear     = 2025;
+    const currentYear  = new Date().getFullYear();
+    const yearText     = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
 
-    if (hostname.includes("hamuzon.github.io")) {
+    if(hostname.includes("hamuzon.github.io")) {
       footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
-    } else if (hostname.includes("hamusata.f5.si")) {
+    } else if(hostname.includes("hamusata.f5.si")) {
       footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
     } else {
       footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
