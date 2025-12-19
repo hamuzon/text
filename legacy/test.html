@@ -10,7 +10,6 @@
 
   <link rel="icon" href="icon-light.png" type="image/png" />
 
-  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=Zen+Kaku+Gothic+New&family=Noto+Sans+JP&family=Noto+Serif+JP&family=Potta+One&display=swap"
     rel="stylesheet"
@@ -79,21 +78,32 @@
       background-color: #ffffff;
     }
 
-    /* 出力枠 */
+    /* ===== 出力枠（はみ出し完全防止） ===== */
     #displayArea {
       width: 100%;
-      min-height: 220px;
+      min-height: 240px;
+      max-height: 60svh;
       padding: 1.2rem;
+
       font-size: 120px;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.2;
+
       border-radius: var(--shape-corner-medium);
       border: 2px solid var(--color-primary);
       box-shadow: 0 0 10px var(--color-primary);
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: anywhere;
+
       background-color: #ffffff;
+
+      /* はみ出し対策 */
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+
+      /* フォントの上下切れ防止 */
+      padding-top: 1.4rem;
+      padding-bottom: 1.6rem;
     }
 
     #settings {
@@ -165,40 +175,20 @@
 
         <div class="setting-item">
           <label>フォントサイズ</label>
-          <input
-            type="range"
-            id="fontSizeSlider"
-            min="40"
-            max="400"
-            value="120"
-          />
+          <input type="range" id="fontSizeSlider" min="40" max="400" value="120" />
           <output id="fontSizeValue">120</output>
         </div>
 
         <div class="setting-item">
           <label>フォント太さ</label>
-          <input
-            type="range"
-            id="fontWeightSlider"
-            min="400"
-            max="900"
-            step="100"
-            value="600"
-          />
+          <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
           <output id="fontWeightValue">600</output>
         </div>
 
         <div class="setting-item">
           <label>行間</label>
-          <input
-            type="range"
-            id="lineHeightSlider"
-            min="1"
-            max="2"
-            step="0.05"
-            value="1.35"
-          />
-          <output id="lineHeightValue">1.35</output>
+          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.2" />
+          <output id="lineHeightValue">1.2</output>
         </div>
 
         <div class="setting-item">
@@ -210,18 +200,12 @@
             <option value="'Noto Sans JP', sans-serif">Noto Sans JP</option>
             <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
             <option value="'Potta One', cursive">Potta One</option>
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
 
         <div class="setting-item">
           <label>アクセント</label>
-          <input
-            type="color"
-            id="accentSelector"
-            value="#00793d"
-          />
+          <input type="color" id="accentSelector" value="#00793d" />
         </div>
 
       </div>
@@ -296,7 +280,6 @@
     updateDisplay();
     updateStyles();
 
-    /* フッター年数（同一年は重ねない） */
     const footerAuthor = document.getElementById("footer-author");
     const baseYear = 2025;
     const currentYear = new Date().getFullYear();
