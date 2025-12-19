@@ -4,12 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Text enlargement app</title>
-<meta name="description" content="Text拡大appです。入力したテキストを大きく表示します。" />
+<meta name="description" content="Text拡大appです。入力したテキストを拡大表示します" />
 <link rel="icon" href="icon-light.png" type="image/png" />
-
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=Zen+Kaku+Gothic+New&family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&family=Sawarabi+Mincho&family=Roboto+Slab&family=Courier+Prime&display=swap" rel="stylesheet" />
 <style>
 :root {
   --color-primary: #00793d;
@@ -38,6 +36,7 @@ header {
   font-size: 6vw;
   letter-spacing: 0.12em;
   text-align: center;
+  user-select: text;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -45,7 +44,7 @@ header {
 
 main {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
   padding: 1rem;
   flex-grow: 1;
   display: flex;
@@ -72,19 +71,18 @@ textarea#textInput {
 
 #displayArea {
   width: 100%;
-  min-height: 250px;
-  max-height: 50vh;
+  min-height: 200px;
   font-weight: 600;
-  font-size: var(--font-size, 150px);
+  font-size: var(--font-size, 120px);
   line-height: var(--line-height, 1.4);
   color: #000000;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
   background-color: var(--color-background);
-  box-shadow: 0 0 12px var(--color-primary);
+  box-shadow: 0 0 16px var(--color-primary);
   white-space: pre-wrap;
   word-break: break-word;
-  overflow-y: auto;
+  user-select: text;
   border: 2px solid var(--color-primary);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Noto Serif JP', serif;
@@ -123,7 +121,7 @@ footer#footer {
   text-align: center;
   font-size: clamp(0.7rem, 1.2vw, 1rem);
   color: var(--color-secondary);
-  padding: 2rem 1rem 3rem 1rem;
+  padding: 1.5rem 0 2.5rem 0;
   user-select: text;
   font-family: 'Noto Serif JP', serif;
 }
@@ -138,13 +136,10 @@ footer#footer a:hover {
 }
 </style>
 </head>
-
 <body>
-
 <header id="appTitle">文字拡大アプリ</header>
 
 <main>
-
   <section>
     <h2>入力</h2>
     <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
@@ -158,11 +153,10 @@ footer#footer a:hover {
   <section>
     <h2>設定</h2>
     <div id="settings">
-
       <div class="setting-item">
         <label for="fontSizeSlider">フォントサイズ (px)</label>
-        <input type="range" id="fontSizeSlider" min="40" max="500" step="1" value="150" />
-        <output id="fontSizeValue">150</output>
+        <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
+        <output id="fontSizeValue">120</output>
       </div>
 
       <div class="setting-item">
@@ -180,12 +174,11 @@ footer#footer a:hover {
       <div class="setting-item">
         <label for="fontSelector">フォント選択</label>
         <select id="fontSelector">
-          <option value="'BIZ UDPGothic', sans-serif">BIZ UDPGothic</option>
-          <option value="'BIZ UDPMincho', serif">BIZ UDPMincho</option>
-          <option value="'Zen Kaku Gothic New', sans-serif">Zen Kaku Gothic New</option>
           <option value="'Potta One', cursive">Potta One</option>
           <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
           <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
+          <option value="'Roboto Slab', serif">Roboto Slab</option>
+          <option value="'Courier Prime', monospace">Courier Prime</option>
           <option value="Arial, sans-serif">Arial</option>
           <option value="Verdana, sans-serif">Verdana</option>
           <option value="Courier New, monospace">Courier New</option>
@@ -196,10 +189,8 @@ footer#footer a:hover {
         <label for="accentSelector">アクセントカラー</label>
         <input type="color" id="accentSelector" value="#00793d" />
       </div>
-
     </div>
   </section>
-
 </main>
 
 <footer id="footer">
@@ -236,15 +227,16 @@ function updateStyles() {
   displayArea.style.lineHeight = lineHeightSlider.value;
   displayArea.style.fontFamily = fontSelector.value;
   displayArea.style.color = "#000000";
+
   textInput.style.borderColor = accentSelector.value;
   displayArea.style.borderColor = accentSelector.value;
-  displayArea.style.boxShadow = `0 0 12px ${accentSelector.value}`;
+  displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
   header.style.backgroundColor = accentSelector.value;
   header.style.color = getContrastColor(accentSelector.value);
 }
 
 function luminance(r,g,b) {
-  const a = [r,g,b].map(v => { v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); });
+  const a = [r,g,b].map(v => {v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
   return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
 }
 
@@ -265,6 +257,7 @@ accentSelector.addEventListener("input", updateStyles);
 updateDisplay();
 updateStyles();
 
+// フッター年表示
 const footerAuthor = document.getElementById("footer-author");
 const hostname = window.location.hostname;
 const baseYear = 2025;
@@ -279,6 +272,5 @@ if(hostname.includes("hamuzon.github.io")) {
   footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
 }
 </script>
-
 </body>
 </html>
