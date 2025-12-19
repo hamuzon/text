@@ -90,6 +90,8 @@ textarea#textInput {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: 'Noto Serif JP', serif;
     flex-shrink: 0;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 #settings {
@@ -270,7 +272,6 @@ const footerAuthor = document.getElementById("footer-author");
 const baseYear = 2025;
 const currentYear = new Date().getFullYear();
 const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
-
 const hostname = window.location.hostname;
 if(hostname.includes("hamuzon.github.io")) {
     footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
