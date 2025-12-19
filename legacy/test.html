@@ -8,7 +8,7 @@
 <link rel="icon" href="icon-light.png" type="image/png" />
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Sawarabi+Mincho&family=Kosugi+Maru&family=Klee+One&family=Hannari&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&family=Sawarabi+Mincho&display=swap" rel="stylesheet" />
 
 <style>
 :root {
@@ -138,66 +138,68 @@ footer#footer a {
 footer#footer a:hover {
     text-decoration: underline;
 }
-
 </style>
 </head>
 
 <body>
-
 <header id="appTitle">文字拡大アプリ</header>
 
 <main>
 
-    <section>
-        <h2>入力</h2>
-        <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
-    </section>
+<section>
+    <h2>入力</h2>
+    <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
+</section>
 
-    <section>
-        <h2>出力</h2>
-        <div id="displayArea">test</div>
-    </section>
+<section>
+    <h2>出力</h2>
+    <div id="displayArea">test</div>
+</section>
 
-    <section>
-        <h2>設定</h2>
-        <div id="settings">
+<section>
+    <h2>設定</h2>
+    <div id="settings">
 
-            <div class="setting-item">
-                <label for="fontSizeSlider">フォントサイズ (px)</label>
-                <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
-                <output id="fontSizeValue">120</output>
-            </div>
-
-            <div class="setting-item">
-                <label for="fontWeightSlider">フォント太さ</label>
-                <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
-                <output id="fontWeightValue">600</output>
-            </div>
-
-            <div class="setting-item">
-                <label for="lineHeightSlider">行間</label>
-                <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
-                <output id="lineHeightValue">1.4</output>
-            </div>
-
-            <div class="setting-item">
-                <label for="fontSelector">フォント選択</label>
-                <select id="fontSelector">
-                    <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
-                    <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
-                    <option value="'Kosugi Maru', sans-serif">Kosugi Maru</option>
-                    <option value="'Klee One', cursive">Klee One</option>
-                    <option value="'Hannari', cursive">Hannari</option>
-                </select>
-            </div>
-
-            <div class="setting-item">
-                <label for="accentSelector">アクセントカラー</label>
-                <input type="color" id="accentSelector" value="#00793d" />
-            </div>
-
+        <div class="setting-item">
+            <label for="fontSizeSlider">フォントサイズ (px)</label>
+            <input type="range" id="fontSizeSlider" min="40" max="400" step="1" value="120" />
+            <output id="fontSizeValue">120</output>
         </div>
-    </section>
+
+        <div class="setting-item">
+            <label for="fontWeightSlider">フォント太さ</label>
+            <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
+            <output id="fontWeightValue">600</output>
+        </div>
+
+        <div class="setting-item">
+            <label for="lineHeightSlider">行間</label>
+            <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
+            <output id="lineHeightValue">1.4</output>
+        </div>
+
+        <div class="setting-item">
+            <label for="fontSelector">フォント選択</label>
+            <select id="fontSelector">
+                <option value="'BIZ UDPGothic', sans-serif">BIZ UDPGothic</option>
+                <option value="'BIZ UDPMincho', serif">BIZ UDPMincho</option>
+                <option value="'Zen Kaku Gothic New', sans-serif">Zen Kaku Gothic New</option>
+                <option value="'Noto Sans JP', sans-serif">Noto Sans JP</option>
+                <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
+                <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
+                <option value="'Potta One', cursive">Potta One</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Courier New, monospace">Courier New</option>
+            </select>
+        </div>
+
+        <div class="setting-item">
+            <label for="accentSelector">アクセントカラー</label>
+            <input type="color" id="accentSelector" value="#00793d" />
+        </div>
+
+    </div>
+</section>
 
 </main>
 
@@ -234,7 +236,6 @@ function updateStyles() {
     displayArea.style.fontWeight = fontWeightSlider.value;
     displayArea.style.lineHeight = lineHeightSlider.value;
     displayArea.style.fontFamily = fontSelector.value;
-
     textInput.style.borderColor = accentSelector.value;
     displayArea.style.borderColor = accentSelector.value;
     displayArea.style.boxShadow = `0 0 16px ${accentSelector.value}`;
@@ -243,21 +244,21 @@ function updateStyles() {
 }
 
 function luminance(r,g,b) {
-    const a = [r,g,b].map(v=>{v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
-    return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+    const a = [r,g,b].map(v => { v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); });
+    return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
 }
 
-function getContrastColor(hex) {
-    const r=parseInt(hex.substr(1,2),16);
-    const g=parseInt(hex.substr(3,2),16);
-    const b=parseInt(hex.substr(5,2),16);
+function getContrastColor(hexColor) {
+    const r = parseInt(hexColor.substr(1,2),16);
+    const g = parseInt(hexColor.substr(3,2),16);
+    const b = parseInt(hexColor.substr(5,2),16);
     return luminance(r,g,b) > 0.5 ? "#000000" : "#ffffff";
 }
 
 textInput.addEventListener("input", updateDisplay);
-fontSizeSlider.addEventListener("input", ()=>{fontSizeValue.textContent=fontSizeSlider.value; updateStyles();});
-fontWeightSlider.addEventListener("input", ()=>{fontWeightValue.textContent=fontWeightSlider.value; updateStyles();});
-lineHeightSlider.addEventListener("input", ()=>{lineHeightValue.textContent=lineHeightSlider.value; updateStyles();});
+fontSizeSlider.addEventListener("input", ()=>{ fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); });
+fontWeightSlider.addEventListener("input", ()=>{ fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); });
+lineHeightSlider.addEventListener("input", ()=>{ lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); });
 fontSelector.addEventListener("input", updateStyles);
 accentSelector.addEventListener("input", updateStyles);
 
@@ -266,11 +267,18 @@ updateStyles();
 
 // フッター年表示
 const footerAuthor = document.getElementById("footer-author");
-const hostname = window.location.hostname;
 const baseYear = 2025;
 const currentYear = new Date().getFullYear();
 const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
-footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
+
+const hostname = window.location.hostname;
+if(hostname.includes("hamuzon.github.io")) {
+    footerAuthor.innerHTML = `&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+} else if(hostname.includes("hamusata.f5.si")) {
+    footerAuthor.innerHTML = `&copy;${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+} else {
+    footerAuthor.innerHTML = `&copy;${yearText} Text Enlarger App`;
+}
 </script>
 
 </body>
