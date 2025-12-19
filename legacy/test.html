@@ -2,269 +2,313 @@
 <html lang="ja">
 
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>Text enlargement app</title>
-<meta name="description" content="Text拡大appですいれたText拡大表示します" />
+  <title>Text enlargement app</title>
+  <meta name="description" content="Text拡大appです。入力したテキストを大きく表示します。" />
 
-<link rel="icon" href="icon-light.png" type="image/png" />
-<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+  <link rel="icon" href="icon-light.png" type="image/png" />
 
-<style>
-:root {
-  --color-primary: #00793d;
-  --color-secondary: #4a6354;
-  --color-background: #ffffff;
-  --color-on-background: #1a1c19;
-  --shape-corner-medium: 12px;
-}
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=Zen+Kaku+Gothic+New&family=Noto+Sans+JP&family=Noto+Serif+JP&family=Potta+One&display=swap"
+    rel="stylesheet"
+  />
 
-* {
-  box-sizing: border-box;
-}
+  <style>
+    :root {
+      --color-primary: #00793d;
+      --color-secondary: #4a6354;
+      --color-background: #ffffff;
+      --color-on-background: #1a1c19;
+      --shape-corner-medium: 12px;
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Noto Serif JP', serif;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
-}
+    * {
+      box-sizing: border-box;
+    }
 
-/* ===== Header ===== */
-header {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  padding: 1.4rem 1rem;
-  text-align: center;
-  font-weight: 700;
-  font-size: clamp(1.5rem, 6vw, 3rem);
-  letter-spacing: 0.12em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Noto Serif JP', serif;
+      background-color: var(--color-background);
+      color: var(--color-on-background);
+    }
 
-/* ===== Main ===== */
-main {
-  flex: 1;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-}
+    header {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-h2 {
-  margin: 0 0 0.8rem 0;
-}
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+    }
 
-textarea#textInput {
-  width: 100%;
-  min-height: 140px;
-  font-size: 40px;
-  padding: 1rem;
-  border-radius: var(--shape-corner-medium);
-  border: 2px solid var(--color-primary);
-  resize: vertical;
-  font-family: inherit;
-}
+    h2 {
+      margin: 0 0 0.6rem 0;
+    }
 
-/* ===== 出力枠 ===== */
-#displayArea {
-  width: 100%;
-  min-height: 220px;
-  padding: 1rem;
+    textarea#textInput {
+      width: 100%;
+      min-height: 140px;
+      padding: 1rem;
+      font-size: 32px;
+      font-family: inherit;
+      border-radius: var(--shape-corner-medium);
+      border: 2px solid var(--color-primary);
+      resize: vertical;
+      background-color: #ffffff;
+    }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    /* 出力枠 */
+    #displayArea {
+      width: 100%;
+      min-height: 220px;
+      padding: 1.2rem;
+      font-size: 120px;
+      font-weight: 600;
+      line-height: 1.35;
+      border-radius: var(--shape-corner-medium);
+      border: 2px solid var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      background-color: #ffffff;
+    }
 
-  text-align: center;
+    #settings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      justify-content: center;
+    }
 
-  font-size: 120px;
-  font-weight: 600;
-  line-height: 1.4;
+    .setting-item {
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  border-radius: var(--shape-corner-medium);
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 12px var(--color-primary);
+    .setting-item label {
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      text-align: center;
+    }
 
-  white-space: pre-wrap;
-  word-break: break-word;
-  background-color: #ffffff;
-}
+    .setting-item input,
+    .setting-item select {
+      width: 100%;
+    }
 
-/* ===== Settings ===== */
-#settings {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-}
+    footer {
+      margin-top: auto;
+      padding: 1.4rem 1rem;
+      text-align: center;
+      font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+      color: var(--color-secondary);
+      background-color: #fafafa;
+      border-top: 1px solid #ddd;
+    }
 
-.setting-item {
-  min-width: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.setting-item label {
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-}
-
-.setting-item input,
-.setting-item select {
-  width: 100%;
-}
-
-/* ===== Footer 修正版 ===== */
-footer#footer {
-  margin-top: auto;
-  padding: 1rem 0.8rem;
-  text-align: center;
-  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
-  color: var(--color-secondary);
-  border-top: 1px solid #ddd;
-  background-color: #fafafa;
-}
-
-footer#footer .footer-author {
-  margin-bottom: 0.3rem;
-}
-
-footer#footer a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-footer#footer a:hover {
-  text-decoration: underline;
-}
-</style>
+    footer div {
+      margin: 0.25rem 0;
+    }
+  </style>
 </head>
 
 <body>
 
-<header id="appTitle">文字拡大アプリ</header>
+  <header id="appTitle">
+    文字拡大アプリ
+  </header>
 
-<main>
+  <main>
 
-<section>
-  <h2>入力</h2>
-  <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
-</section>
+    <section>
+      <h2>入力</h2>
+      <textarea
+        id="textInput"
+        placeholder="ここにテキストを入力してください"
+      ></textarea>
+    </section>
 
-<section>
-  <h2>出力</h2>
-  <div id="displayArea">test</div>
-</section>
+    <section>
+      <h2>出力</h2>
+      <div id="displayArea">test</div>
+    </section>
 
-<section>
-  <h2>設定</h2>
-  <div id="settings">
+    <section>
+      <h2>設定</h2>
 
-    <div class="setting-item">
-      <label>フォントサイズ</label>
-      <input type="range" id="fontSizeSlider" min="40" max="400" value="120" />
-      <output id="fontSizeValue">120</output>
-    </div>
+      <div id="settings">
 
-    <div class="setting-item">
-      <label>フォント太さ</label>
-      <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
-      <output id="fontWeightValue">600</output>
-    </div>
+        <div class="setting-item">
+          <label>フォントサイズ</label>
+          <input
+            type="range"
+            id="fontSizeSlider"
+            min="40"
+            max="400"
+            value="120"
+          />
+          <output id="fontSizeValue">120</output>
+        </div>
 
-    <div class="setting-item">
-      <label>行間</label>
-      <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.4" />
-      <output id="lineHeightValue">1.4</output>
-    </div>
+        <div class="setting-item">
+          <label>フォント太さ</label>
+          <input
+            type="range"
+            id="fontWeightSlider"
+            min="400"
+            max="900"
+            step="100"
+            value="600"
+          />
+          <output id="fontWeightValue">600</output>
+        </div>
 
-    <div class="setting-item">
-      <label>フォント</label>
-      <select id="fontSelector">
-        <option value="'Potta One', cursive">Potta One</option>
-        <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
-        <option value="Arial, sans-serif">Arial</option>
-        <option value="Courier New, monospace">Courier New</option>
-      </select>
-    </div>
+        <div class="setting-item">
+          <label>行間</label>
+          <input
+            type="range"
+            id="lineHeightSlider"
+            min="1"
+            max="2"
+            step="0.05"
+            value="1.35"
+          />
+          <output id="lineHeightValue">1.35</output>
+        </div>
 
-    <div class="setting-item">
-      <label>アクセント</label>
-      <input type="color" id="accentSelector" value="#00793d" />
-    </div>
+        <div class="setting-item">
+          <label>フォント</label>
+          <select id="fontSelector">
+            <option value="'BIZ UDPGothic', sans-serif">BIZ UDPGothic</option>
+            <option value="'BIZ UDPMincho', serif">BIZ UDPMincho</option>
+            <option value="'Zen Kaku Gothic New', sans-serif">Zen Kaku Gothic New</option>
+            <option value="'Noto Sans JP', sans-serif">Noto Sans JP</option>
+            <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
+            <option value="'Potta One', cursive">Potta One</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Courier New, monospace">Courier New</option>
+          </select>
+        </div>
 
-  </div>
-</section>
+        <div class="setting-item">
+          <label>アクセント</label>
+          <input
+            type="color"
+            id="accentSelector"
+            value="#00793d"
+          />
+        </div>
 
-</main>
+      </div>
+    </section>
 
-<footer id="footer">
-  <div id="footer-author" class="footer-author"></div>
-  <div>HTML / CSS / JavaScript / Google Fonts</div>
-</footer>
+  </main>
 
-<script>
-const textInput = document.getElementById("textInput");
-const displayArea = document.getElementById("displayArea");
+  <footer>
+    <div id="footer-author"></div>
+    <div>HTML / CSS / JavaScript / Google Fonts</div>
+  </footer>
 
-const fontSizeSlider = document.getElementById("fontSizeSlider");
-const fontSizeValue = document.getElementById("fontSizeValue");
+  <script>
+    const textInput = document.getElementById("textInput");
+    const displayArea = document.getElementById("displayArea");
 
-const fontWeightSlider = document.getElementById("fontWeightSlider");
-const fontWeightValue = document.getElementById("fontWeightValue");
+    const fontSizeSlider = document.getElementById("fontSizeSlider");
+    const fontSizeValue = document.getElementById("fontSizeValue");
 
-const lineHeightSlider = document.getElementById("lineHeightSlider");
-const lineHeightValue = document.getElementById("lineHeightValue");
+    const fontWeightSlider = document.getElementById("fontWeightSlider");
+    const fontWeightValue = document.getElementById("fontWeightValue");
 
-const fontSelector = document.getElementById("fontSelector");
-const accentSelector = document.getElementById("accentSelector");
-const header = document.getElementById("appTitle");
+    const lineHeightSlider = document.getElementById("lineHeightSlider");
+    const lineHeightValue = document.getElementById("lineHeightValue");
 
-function updateDisplay() {
-  displayArea.textContent = textInput.value.trim() || "test";
-}
+    const fontSelector = document.getElementById("fontSelector");
+    const accentSelector = document.getElementById("accentSelector");
+    const header = document.getElementById("appTitle");
 
-function updateStyles() {
-  displayArea.style.fontSize = fontSizeSlider.value + "px";
-  displayArea.style.fontWeight = fontWeightSlider.value;
-  displayArea.style.lineHeight = lineHeightSlider.value;
-  displayArea.style.fontFamily = fontSelector.value;
+    function updateDisplay() {
+      displayArea.textContent =
+        textInput.value.trim() || "test";
+    }
 
-  const c = accentSelector.value;
-  displayArea.style.borderColor = c;
-  displayArea.style.boxShadow = `0 0 12px ${c}`;
-  textInput.style.borderColor = c;
-  header.style.backgroundColor = c;
-}
+    function updateStyles() {
+      displayArea.style.fontSize =
+        fontSizeSlider.value + "px";
+      displayArea.style.fontWeight =
+        fontWeightSlider.value;
+      displayArea.style.lineHeight =
+        lineHeightSlider.value;
+      displayArea.style.fontFamily =
+        fontSelector.value;
 
-textInput.addEventListener("input", updateDisplay);
-fontSizeSlider.addEventListener("input", () => { fontSizeValue.textContent = fontSizeSlider.value; updateStyles(); });
-fontWeightSlider.addEventListener("input", () => { fontWeightValue.textContent = fontWeightSlider.value; updateStyles(); });
-lineHeightSlider.addEventListener("input", () => { lineHeightValue.textContent = lineHeightSlider.value; updateStyles(); });
-fontSelector.addEventListener("change", updateStyles);
-accentSelector.addEventListener("input", updateStyles);
+      const c = accentSelector.value;
+      displayArea.style.borderColor = c;
+      displayArea.style.boxShadow = `0 0 10px ${c}`;
+      textInput.style.borderColor = c;
+      header.style.backgroundColor = c;
+    }
 
-updateDisplay();
-updateStyles();
+    textInput.addEventListener("input", updateDisplay);
 
-/* ===== フッター年数 ===== */
-const footerAuthor = document.getElementById("footer-author");
-const baseYear = 2025;
-const currentYear = new Date().getFullYear();
-const yearText = currentYear > baseYear ? `${baseYear}–${currentYear}` : `${baseYear}`;
+    fontSizeSlider.addEventListener("input", () => {
+      fontSizeValue.textContent = fontSizeSlider.value;
+      updateStyles();
+    });
 
-footerAuthor.innerHTML = `&copy;${yearText} Text enlargement app`;
-</script>
+    fontWeightSlider.addEventListener("input", () => {
+      fontWeightValue.textContent = fontWeightSlider.value;
+      updateStyles();
+    });
+
+    lineHeightSlider.addEventListener("input", () => {
+      lineHeightValue.textContent = lineHeightSlider.value;
+      updateStyles();
+    });
+
+    fontSelector.addEventListener("change", updateStyles);
+    accentSelector.addEventListener("input", updateStyles);
+
+    updateDisplay();
+    updateStyles();
+
+    /* フッター年数（同一年は重ねない） */
+    const footerAuthor = document.getElementById("footer-author");
+    const baseYear = 2025;
+    const currentYear = new Date().getFullYear();
+
+    const yearText =
+      currentYear > baseYear
+        ? `${baseYear}–${currentYear}`
+        : `${baseYear}`;
+
+    footerAuthor.innerHTML =
+      `&copy; ${yearText} Text enlargement app`;
+  </script>
 
 </body>
 </html>
