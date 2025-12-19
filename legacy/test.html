@@ -10,7 +10,6 @@
 
   <link rel="icon" href="icon-light.png" type="image/png" />
 
-  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=Zen+Kaku+Gothic+New&family=Noto+Sans+JP&family=Noto+Serif+JP&family=Potta+One&display=swap"
     rel="stylesheet"
@@ -21,7 +20,6 @@
       --color-primary: #00793d;
       --color-secondary: #4a6354;
       --color-background: #ffffff;
-      --color-on-background: #1a1c19;
       --shape-corner-medium: 12px;
     }
 
@@ -31,12 +29,11 @@
 
     body {
       margin: 0;
-      min-height: 100svh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       font-family: 'Noto Serif JP', serif;
       background-color: var(--color-background);
-      color: var(--color-on-background);
     }
 
     header {
@@ -44,12 +41,9 @@
       color: #ffffff;
       padding: 1.2rem 1rem;
       text-align: center;
-      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      font-size: clamp(1.5rem, 6vw, 3rem);
       font-weight: 700;
       letter-spacing: 0.12em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     main {
@@ -60,46 +54,54 @@
       padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 2.2rem;
+      gap: 2.5rem;
     }
 
     h2 {
-      margin: 0 0 0.6rem 0;
+      margin: 0 0 0.8rem 0;
     }
 
     textarea#textInput {
       width: 100%;
       min-height: 140px;
       padding: 1rem;
-      font-size: 32px;
+      font-size: 40px;
       font-family: inherit;
       border-radius: var(--shape-corner-medium);
       border: 2px solid var(--color-primary);
       resize: vertical;
-      background-color: #ffffff;
     }
 
-    /* ===== 出力枠 修正ここ ===== */
     #displayArea {
       width: 100%;
-      min-height: 220px;
+      min-height: min(60vh, 420px);
       padding: 1.2rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
       font-size: 120px;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.3;
+
       border-radius: var(--shape-corner-medium);
       border: 2px solid var(--color-primary);
-      box-shadow: 0 0 10px var(--color-primary);
+      box-shadow: 0 0 12px var(--color-primary);
+
       white-space: pre-wrap;
       word-break: break-word;
       overflow-wrap: anywhere;
+
       background-color: #ffffff;
     }
 
     #settings {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.4rem;
+      gap: 1.5rem;
       justify-content: center;
     }
 
@@ -113,7 +115,6 @@
     .setting-item label {
       margin-bottom: 0.4rem;
       font-weight: 600;
-      text-align: center;
     }
 
     .setting-item input,
@@ -122,16 +123,12 @@
     }
 
     footer {
-      padding: 1.4rem 1rem;
+      padding: 1.5rem 1rem;
       text-align: center;
-      font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+      font-size: 0.85rem;
       color: var(--color-secondary);
-      background-color: #fafafa;
       border-top: 1px solid #ddd;
-    }
-
-    footer div {
-      margin: 0.25rem 0;
+      background-color: #fafafa;
     }
   </style>
 </head>
@@ -169,15 +166,15 @@
         </div>
 
         <div class="setting-item">
-          <label>フォント太さ</label>
+          <label>太さ</label>
           <input type="range" id="fontWeightSlider" min="400" max="900" step="100" value="600" />
           <output id="fontWeightValue">600</output>
         </div>
 
         <div class="setting-item">
           <label>行間</label>
-          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.35" />
-          <output id="lineHeightValue">1.35</output>
+          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.05" value="1.3" />
+          <output id="lineHeightValue">1.3</output>
         </div>
 
         <div class="setting-item">
@@ -189,8 +186,6 @@
             <option value="'Noto Sans JP', sans-serif">Noto Sans JP</option>
             <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
             <option value="'Potta One', cursive">Potta One</option>
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Courier New, monospace">Courier New</option>
           </select>
         </div>
 
@@ -204,9 +199,8 @@
 
   </main>
 
-  <footer>
-    <div id="footer-author"></div>
-    <div>HTML / CSS / JavaScript / Google Fonts</div>
+  <footer id="footer">
+    <!-- JSで年数を出力 -->
   </footer>
 
   <script>
@@ -214,14 +208,8 @@
     const displayArea = document.getElementById("displayArea");
 
     const fontSizeSlider = document.getElementById("fontSizeSlider");
-    const fontSizeValue = document.getElementById("fontSizeValue");
-
     const fontWeightSlider = document.getElementById("fontWeightSlider");
-    const fontWeightValue = document.getElementById("fontWeightValue");
-
     const lineHeightSlider = document.getElementById("lineHeightSlider");
-    const lineHeightValue = document.getElementById("lineHeightValue");
-
     const fontSelector = document.getElementById("fontSelector");
     const accentSelector = document.getElementById("accentSelector");
     const header = document.getElementById("appTitle");
@@ -238,39 +226,30 @@
 
       const c = accentSelector.value;
       displayArea.style.borderColor = c;
-      displayArea.style.boxShadow = `0 0 10px ${c}`;
+      displayArea.style.boxShadow = `0 0 12px ${c}`;
       textInput.style.borderColor = c;
       header.style.backgroundColor = c;
     }
 
     textInput.addEventListener("input", updateDisplay);
-
-    fontSizeSlider.addEventListener("input", () => {
-      fontSizeValue.textContent = fontSizeSlider.value;
-      updateStyles();
-    });
-
-    fontWeightSlider.addEventListener("input", () => {
-      fontWeightValue.textContent = fontWeightSlider.value;
-      updateStyles();
-    });
-
-    lineHeightSlider.addEventListener("input", () => {
-      lineHeightValue.textContent = lineHeightSlider.value;
-      updateStyles();
-    });
-
+    fontSizeSlider.addEventListener("input", updateStyles);
+    fontWeightSlider.addEventListener("input", updateStyles);
+    lineHeightSlider.addEventListener("input", updateStyles);
     fontSelector.addEventListener("change", updateStyles);
     accentSelector.addEventListener("input", updateStyles);
 
+    /* ===== フッター年数 修正版 ===== */
+    const START_YEAR = 2025;
+    const CURRENT_YEAR = new Date().getFullYear();
+    const footer = document.getElementById("footer");
+
+    footer.textContent =
+      START_YEAR === CURRENT_YEAR
+        ? `© ${CURRENT_YEAR} Text enlargement app`
+        : `© ${START_YEAR}–${CURRENT_YEAR} Text enlargement app`;
+
     updateDisplay();
     updateStyles();
-
-    const footerAuthor = document.getElementById("footer-author");
-    const year = new Date().getFullYear();
-
-    footerAuthor.innerHTML =
-      `&copy; 2025–${year} Text enlargement app`;
   </script>
 
 </body>
