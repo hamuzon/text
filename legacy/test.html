@@ -78,12 +78,12 @@
       background-color: #ffffff;
     }
 
-    /* ===== 出力枠（はみ出し完全防止） ===== */
+    /* ===== 出力枠（横スクロール完全禁止） ===== */
     #displayArea {
       width: 100%;
       min-height: 240px;
       max-height: 60svh;
-      padding: 1.2rem;
+      padding: 1.4rem 1.2rem;
 
       font-size: 120px;
       font-weight: 600;
@@ -92,18 +92,16 @@
       border-radius: var(--shape-corner-medium);
       border: 2px solid var(--color-primary);
       box-shadow: 0 0 10px var(--color-primary);
-
       background-color: #ffffff;
 
-      /* はみ出し対策 */
-      overflow: auto;
+      /* 重要：横スクロールなし */
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      /* 強制折り返し */
       white-space: pre-wrap;
       word-break: break-all;
       overflow-wrap: anywhere;
-
-      /* フォントの上下切れ防止 */
-      padding-top: 1.4rem;
-      padding-bottom: 1.6rem;
     }
 
     #settings {
