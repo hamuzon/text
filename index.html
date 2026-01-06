@@ -8,7 +8,7 @@
 <link rel="icon" href="icon-light.png" type="image/png">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Potta+One&family=Noto+Serif+JP&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=Zen+Kaku+Gothic+New&family=Zen+Maru+Gothic&family=Noto+Sans+JP&family=Noto+Serif+JP&family=Sawarabi+Gothic&family=Sawarabi+Mincho&family=Potta+One&family=Kosugi&family=Kosugi+Maru&family=Kiwi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&family=Shippori+Mincho&family=Shippori+Antique&family=Hina+Mincho&family=Yusei+Magic&family=Rampart+One&family=DotGothic16&family=Yuji+Syuku&family=Yuji+Mai&family=Yuji+Boku&family=Stick&family=Train+One&family=RocknRoll+One&family=Reggae+One&family=Dela+Gothic+One&family=New+Tegomin&family=Kaisei+Opti&family=Kaisei+Decol&family=Kaisei+HarunoUmi&family=Kaisei+Tokumin&family=IBM+Plex+Sans+JP&family=IBM+Plex+Serif+JP&family=Source+Han+Sans+JP&family=Source+Han+Serif+JP&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -187,12 +187,49 @@ footer#footer a:hover { text-decoration: underline; }
   <div class="setting-item">
     <label for="fontSelector">フォント選択</label>
     <select id="fontSelector">
-      <option value="'Potta One', cursive">Potta One</option>
+      <option value="'BIZ UDPGothic', sans-serif">BIZ UDPGothic</option>
+      <option value="'BIZ UDPMincho', serif">BIZ UDPMincho</option>
+      <option value="'Zen Kaku Gothic New', sans-serif">Zen Kaku Gothic New</option>
+      <option value="'Zen Maru Gothic', sans-serif">Zen Maru Gothic</option>
+      <option value="'Noto Sans JP', sans-serif">Noto Sans JP</option>
       <option value="'Noto Serif JP', serif" selected>Noto Serif JP</option>
+      <option value="'Sawarabi Gothic', sans-serif">Sawarabi Gothic</option>
       <option value="'Sawarabi Mincho', serif">Sawarabi Mincho</option>
+      <option value="'Potta One', cursive">Potta One</option>
+      <option value="'Kosugi', sans-serif">Kosugi</option>
+      <option value="'Kosugi Maru', sans-serif">Kosugi Maru</option>
+      <option value="'Kiwi Maru', serif">Kiwi Maru</option>
+      <option value="'M PLUS 1p', sans-serif">M PLUS 1p</option>
+      <option value="'M PLUS Rounded 1c', sans-serif">M PLUS Rounded 1c</option>
+      <option value="'Shippori Mincho', serif">Shippori Mincho</option>
+      <option value="'Shippori Antique', serif">Shippori Antique</option>
+      <option value="'Hina Mincho', serif">Hina Mincho</option>
+      <option value="'Yusei Magic', sans-serif">Yusei Magic</option>
+      <option value="'Rampart One', cursive">Rampart One</option>
+      <option value="'DotGothic16', sans-serif">DotGothic16</option>
+      <option value="'Yuji Syuku', serif">Yuji Syuku</option>
+      <option value="'Yuji Mai', serif">Yuji Mai</option>
+      <option value="'Yuji Boku', serif">Yuji Boku</option>
+      <option value="'Stick', sans-serif">Stick</option>
+      <option value="'Train One', cursive">Train One</option>
+      <option value="'RocknRoll One', cursive">RocknRoll One</option>
+      <option value="'Reggae One', cursive">Reggae One</option>
+      <option value="'Dela Gothic One', sans-serif">Dela Gothic One</option>
+      <option value="'New Tegomin', serif">New Tegomin</option>
+      <option value="'Kaisei Opti', serif">Kaisei Opti</option>
+      <option value="'Kaisei Decol', serif">Kaisei Decol</option>
+      <option value="'Kaisei HarunoUmi', serif">Kaisei HarunoUmi</option>
+      <option value="'Kaisei Tokumin', serif">Kaisei Tokumin</option>
+      <option value="'IBM Plex Sans JP', sans-serif">IBM Plex Sans JP</option>
+      <option value="'IBM Plex Serif JP', serif">IBM Plex Serif JP</option>
+      <option value="'Source Han Sans JP', sans-serif">Source Han Sans JP</option>
+      <option value="'Source Han Serif JP', serif">Source Han Serif JP</option>
       <option value="Arial, sans-serif">Arial</option>
       <option value="Verdana, sans-serif">Verdana</option>
+      <option value="Times New Roman, serif">Times New Roman</option>
       <option value="Courier New, monospace">Courier New</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="Tahoma, sans-serif">Tahoma</option>
     </select>
   </div>
   <div class="setting-item">
@@ -240,7 +277,7 @@ const initialState = {
   colorText: "#000"
 };
 
-// コントラスト
+// コントラスト計算
 function luminance(r,g,b){
   const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
   return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
@@ -259,7 +296,6 @@ function updateStyles(){
   displayArea.style.lineHeight = lineHeightSlider.value;
   displayArea.style.fontFamily = fontSelector.value;
 
-  // アクセントカラー
   let accent = accentSelector.value;
   textInput.style.borderColor = accent;
   displayArea.style.borderColor = accent;
@@ -291,34 +327,23 @@ function updateDisplay(){
   displayArea.textContent = textInput.value.trim() || "test";
 }
 
-// URL更新（変更値だけ最後尾）
+// URL更新
 function updateURLParams(){
   const url = new URL(window.location);
   const params = new URLSearchParams(url.search);
-
-  // 入力値はtextに統一
   if(textInput.value!==initialState.text) params.set("text", textInput.value);
-
   if(fontSelector.value!==initialState.font) params.set("font", fontSelector.value);
   if(fontWeightSlider.value!==initialState.weight) params.set("weight", fontWeightSlider.value);
   if(fontSizeSlider.value!==initialState.size) params.set("size", fontSizeSlider.value);
   if(lineHeightSlider.value!==initialState.line) params.set("line", lineHeightSlider.value);
   if(accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-
   const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
   window.history.replaceState({}, "", newURL);
 }
 
 // ローカル保存・ロード
 function saveToLocal(){
-  const state={
-    text:textInput.value,
-    font:fontSelector.value,
-    weight:fontWeightSlider.value,
-    size:fontSizeSlider.value,
-    line:lineHeightSlider.value,
-    color:accentSelector.value
-  };
+  const state={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
   localStorage.setItem('textAppState',JSON.stringify(state));
 }
 function loadFromLocal(){
@@ -339,27 +364,18 @@ lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineH
 fontSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
 accentSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
 
-// Copyボタン（固定順）
+// Copy
 copyButton.addEventListener("click",()=>{
-  const url = new URL(window.location.origin + window.location.pathname);
-  const params = new URLSearchParams();
-  const order = ["text","font","weight","size","line","color"];
-  const current = {
-    text:textInput.value,
-    font:fontSelector.value,
-    weight:fontWeightSlider.value,
-    size:fontSizeSlider.value,
-    line:lineHeightSlider.value,
-    color:accentSelector.value
-  };
-  order.forEach(k=>{
-    if(current[k]!==initialState[k]) params.set(k,current[k]);
-  });
-  url.search = params.toString();
+  const url=new URL(window.location.origin+window.location.pathname);
+  const params=new URLSearchParams();
+  const order=["text","font","weight","size","line","color"];
+  const current={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
+  order.forEach(k=>{if(current[k]!==initialState[k]) params.set(k,current[k]);});
+  url.search=params.toString();
   navigator.clipboard.writeText(url.toString()).then(()=>{alert("URLコピーしました");});
 });
 
-// Resetボタン
+// Reset
 resetButton.addEventListener("click",()=>{
   textInput.value=initialState.text;
   fontSelector.value=initialState.font;
@@ -367,15 +383,13 @@ resetButton.addEventListener("click",()=>{
   fontSizeSlider.value=initialState.size;
   lineHeightSlider.value=initialState.line;
   accentSelector.value=initialState.color;
-
   fontSizeValue.textContent=fontSizeSlider.value;
   fontWeightValue.textContent=fontWeightSlider.value;
   lineHeightValue.textContent=lineHeightSlider.value;
-
   updateDisplay();
   updateStyles();
   saveToLocal();
-  const url = window.location.origin + window.location.pathname;
+  const url=window.location.origin+window.location.pathname;
   window.history.replaceState({}, "", url);
   localStorage.removeItem('textAppState');
 });
@@ -386,11 +400,11 @@ updateDisplay();
 updateStyles();
 
 // フッター更新
-const footerAuthor = document.getElementById("footer-author");
-const hostname = window.location.hostname;
-const baseYear = 2025;
-const currentYear = new Date().getFullYear();
-const yearText = currentYear>baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+const footerAuthor=document.getElementById("footer-author");
+const hostname=window.location.hostname;
+const baseYear=2025;
+const currentYear=new Date().getFullYear();
+const yearText=currentYear>baseYear?`${baseYear}~${currentYear}`:`${baseYear}`;
 if(hostname.includes("hamuzon.github.io")){
   footerAuthor.innerHTML=`&copy;${yearText} <a href="https://hamuzon.github.io" target="_blank">@hamuzon</a>`;
 }else if(hostname.includes("hamusata.f5.si")){
