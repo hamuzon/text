@@ -40,6 +40,7 @@
       font-size: 6vw;
       letter-spacing: 0.12em;
       text-align: center;
+      -webkit-user-select: text;
       user-select: text;
       white-space: nowrap;
       overflow: hidden;
@@ -60,6 +61,8 @@
     }
 
     section { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    #outputSection { flex: 1 1 auto; }
 
     textarea#textInput {
       width: 100%;
@@ -88,6 +91,7 @@
       box-shadow: 0 0 12px var(--color-primary);
       white-space: pre-wrap;
       word-break: break-word;
+      -webkit-user-select: text;
       user-select: text;
       border: 2px solid var(--color-primary);
       font-family: 'Noto Serif JP', serif;
@@ -129,6 +133,7 @@
       font-size: clamp(0.7rem, 1.2vw, 1rem);
       color: var(--color-secondary);
       padding: 1.5rem 0 2.5rem 0;
+      -webkit-user-select: text;
       user-select: text;
       flex-shrink: 0;
     }
@@ -149,7 +154,7 @@
       <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
     </section>
 
-    <section style="flex:1 1 auto; display:flex; flex-direction:column;">
+    <section id="outputSection">
       <h2>出力</h2>
       <div id="displayArea">test</div>
     </section>
@@ -177,7 +182,7 @@
         </div>
 
         <div class="setting-item">
-          <label>フォント</label>
+          <label for="fontSelector">フォント</label>
           <select id="fontSelector">
             <option value="'BIZ UDPGothic', sans-serif">BIZ UDPGothic</option>
             <option value="'BIZ UDPMincho', serif">BIZ UDPMincho</option>
