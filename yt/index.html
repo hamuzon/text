@@ -16,6 +16,7 @@
       width:100%;
       max-width:600px;
       background: rgba(255,255,255,0.3);
+      -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
       border-radius:20px;
       padding:2rem;
@@ -40,6 +41,7 @@
       border:1px solid rgba(59,47,47,0.3);
       background: rgba(255,255,255,0.3);
       color:#3b2f2f;
+      -webkit-backdrop-filter: blur(5px);
       backdrop-filter: blur(5px);
       font-family:'Potta One', Arial, sans-serif;
     }
@@ -88,15 +90,25 @@
   <textarea id="outputMarkdown" rows="3" readonly placeholder="Markdown形式で表示 / Markdown output"></textarea>
 </div>
 
-<footer>
-  &copy; <span id="year"></span> <a href="https://hamusata.f5.si">@hamusata</a> – All rights reserved
+<footer id="footer-author">
+  &copy; 2025 YouTube Markdown Link
 </footer>
 
 <script>
-  // 年自動更新
+  // フッター更新
+  const footerAuthor = document.getElementById("footer-author");
+  const hostname = window.location.hostname;
   const baseYear = 2025;
-  const now = new Date().getFullYear();
-  document.getElementById("year").textContent = now > baseYear ? `${baseYear}~${now}` : `${baseYear}`;
+  const currentYear = new Date().getFullYear();
+  const yearText = currentYear > baseYear ? `${baseYear}~${currentYear}` : `${baseYear}`;
+
+  if(hostname.includes("hamuzon.github.io")){
+    footerAuthor.innerHTML = `&copy; ${yearText} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+  } else if(hostname.includes("hamusata.f5.si")){
+    footerAuthor.innerHTML = `&copy; ${yearText} <a href="https://home.hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+  } else {
+    footerAuthor.innerHTML = `&copy; ${yearText} YouTube Markdown Link`;
+  }
 
   // YouTube短縮リンク生成
   function getMinimalYouTubeLink(url, keepTime){
