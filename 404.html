@@ -32,16 +32,6 @@
       word-break: break-word;
     }
 
-    header {
-      background-color: var(--color-primary);
-      color: #ffffff;
-      padding: 1.5rem 1rem;
-      font-weight: 700;
-      font-size: clamp(1.8rem, 6vw, 2.2rem);
-      text-align: center;
-      letter-spacing: 0.08em;
-    }
-
     main {
       flex-grow: 1;
       width: 100%;
@@ -83,8 +73,9 @@
     a.back {
       display: inline-block;
       padding: 0.65rem 1.2rem;
-      background: var(--color-primary);
-      color: #ffffff;
+      background: transparent;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
       text-decoration: none;
       border-radius: var(--shape-corner-medium);
       font-weight: 600;
@@ -113,8 +104,6 @@
   </style>
 </head>
 <body>
-  <header>文字拡大アプリ</header>
-
   <main>
     <section class="card" aria-labelledby="error-title">
       <h1 id="error-title">404</h1>
@@ -160,10 +149,12 @@
         return;
       }
 
-      const textColor = getContrastColor(accent);
       document.documentElement.style.setProperty('--color-primary', accent);
-      document.querySelector('header').style.color = textColor;
-      document.querySelector('.back').style.color = textColor;
+      const back = document.querySelector('.back');
+      if (back) {
+        back.style.color = accent;
+        back.style.borderColor = accent;
+      }
 
       if (accent.toLowerCase() === '#ffffff') {
         document.body.style.backgroundColor = '#000000';
@@ -176,7 +167,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       const hostname = location.hostname;
       const backLink = document.getElementById('backLink');
-
       if (hostname === 'hamuzon.github.io') {
         backLink.href = 'https://hamuzon.github.io/text/';
       } else if (hostname.includes('hamuzon-jp.f5.si')) {
