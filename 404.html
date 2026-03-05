@@ -167,6 +167,11 @@
           back.style.color = '#000000';
           back.style.borderColor = '#ffffff';
         }
+      } else {
+        document.body.style.backgroundColor = '#ffffff';
+        document.documentElement.style.setProperty('--color-background', '#ffffff');
+        document.documentElement.style.setProperty('--color-on-background', '#1a1c19');
+        document.documentElement.style.setProperty('--color-secondary', '#4a6354');
       }
     }
 
