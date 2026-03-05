@@ -119,17 +119,37 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      if (location.hostname === 'hamuzon.github.io') {
-        document.getElementById('backLink').href = 'https://hamuzon.github.io/text/';
+      const hostname = location.hostname;
+      const backLink = document.getElementById('backLink');
+
+      if (hostname === 'hamuzon.github.io') {
+        backLink.href = 'https://hamuzon.github.io/text/';
+      } else if (hostname.includes('hamuzon-jp.f5.si')) {
+        backLink.href = 'https://hamuzon-jp.f5.si/';
+      } else if (hostname.includes('hamusata.f5.si')) {
+        backLink.href = 'https://hamusata.f5.si/';
       }
     });
 
     (function () {
       const baseYear = 2025;
       const currentYear = new Date().getFullYear();
+      const hostname = location.hostname;
       const footer = document.getElementById('footer-copy');
       const yearStr = currentYear === baseYear ? `${baseYear}` : `${Math.min(baseYear, currentYear)}–${Math.max(baseYear, currentYear)}`;
-      footer.innerHTML = `&copy; ${yearStr} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+
+      let footerHTML = '';
+      if (hostname === 'hamuzon.github.io') {
+        footerHTML = `&copy; ${yearStr} <a href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+      } else if (hostname.includes('hamuzon-jp.f5.si')) {
+        footerHTML = `&copy; ${yearStr} <a href="https://hamuzon-jp.f5.si" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+      } else if (hostname.includes('hamusata.f5.si')) {
+        footerHTML = `&copy; ${yearStr} <a href="https://hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+      } else {
+        footerHTML = `&copy; ${yearStr} 文字拡大アプリ`;
+      }
+
+      if (footer) footer.innerHTML = footerHTML;
     })();
   </script>
 </body>
