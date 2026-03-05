@@ -289,6 +289,14 @@ function getContrastColor(hex){
   return luminance(r,g,b)>0.5?"#000":"#fff";
 }
 
+function getEdgeColorOnWhite(hex){
+  const r=parseInt(hex.substr(1,2),16);
+  const g=parseInt(hex.substr(3,2),16);
+  const b=parseInt(hex.substr(5,2),16);
+  const lightness=luminance(r,g,b);
+  return lightness>0.9?"#b8b8b8":hex;
+}
+
 // スタイル更新
 function updateStyles(){
   displayArea.style.fontSize = fontSizeSlider.value + "px";
@@ -297,29 +305,25 @@ function updateStyles(){
   displayArea.style.fontFamily = fontSelector.value;
 
   let accent = accentSelector.value;
-  textInput.style.borderColor = accent;
-  displayArea.style.borderColor = accent;
-  displayArea.style.boxShadow = `0 0 16px ${accent}`;
+  const edgeColor = getEdgeColorOnWhite(accent);
+  textInput.style.borderColor = edgeColor;
+  displayArea.style.borderColor = edgeColor;
+  displayArea.style.boxShadow = `0 0 16px ${edgeColor}`;
   header.style.backgroundColor = accent;
   header.style.color = getContrastColor(accent);
+  header.style.borderBottom = `2px solid ${edgeColor}`;
   copyButton.style.backgroundColor = accent;
   copyButton.style.color = getContrastColor(accent);
+  copyButton.style.border = `1px solid ${edgeColor}`;
   resetButton.style.backgroundColor = accent;
   resetButton.style.color = getContrastColor(accent);
+  resetButton.style.border = `1px solid ${edgeColor}`;
 
-  if(accent.toLowerCase()==="#ffffff"){
-    document.body.style.backgroundColor = "#000";
-    displayArea.style.backgroundColor = "#000";
-    displayArea.style.color = "#fff";
-    textInput.style.backgroundColor = "#000";
-    textInput.style.color = "#fff";
-  } else {
-    document.body.style.backgroundColor = initialState.background;
-    displayArea.style.backgroundColor = initialState.background;
-    displayArea.style.color = initialState.colorText;
-    textInput.style.backgroundColor = initialState.background;
-    textInput.style.color = initialState.colorText;
-  }
+  document.body.style.backgroundColor = initialState.background;
+  displayArea.style.backgroundColor = initialState.background;
+  displayArea.style.color = initialState.colorText;
+  textInput.style.backgroundColor = initialState.background;
+  textInput.style.color = initialState.colorText;
 }
 
 // 表示更新
