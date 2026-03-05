@@ -152,6 +152,7 @@
       document.documentElement.style.setProperty('--color-primary', accent);
       const back = document.querySelector('.back');
       if (back) {
+        back.style.backgroundColor = 'transparent';
         back.style.color = accent;
         back.style.borderColor = accent;
       }
@@ -161,6 +162,11 @@
         document.documentElement.style.setProperty('--color-background', '#000000');
         document.documentElement.style.setProperty('--color-on-background', '#ffffff');
         document.documentElement.style.setProperty('--color-secondary', '#b8d4c3');
+        if (back) {
+          back.style.backgroundColor = '#ffffff';
+          back.style.color = '#000000';
+          back.style.borderColor = '#ffffff';
+        }
       }
     }
 
