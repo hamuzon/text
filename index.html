@@ -360,6 +360,17 @@ function loadFromLocal(){
   if(state.color) accentSelector.value=state.color;
 }
 
+// URLパラメータ読み込み
+function loadFromURL(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get("text")) textInput.value = params.get("text");
+  if(params.get("font")) fontSelector.value = params.get("font");
+  if(params.get("weight")) fontWeightSlider.value = params.get("weight");
+  if(params.get("size")) fontSizeSlider.value = params.get("size");
+  if(params.get("line")) lineHeightSlider.value = params.get("line");
+  if(params.get("color")) accentSelector.value = params.get("color");
+}
+
 // イベント
 textInput.addEventListener("input",()=>{updateDisplay(); saveToLocal(); updateURLParams();});
 fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
@@ -400,6 +411,10 @@ resetButton.addEventListener("click",()=>{
 
 // 初期ロード
 loadFromLocal();
+loadFromURL();
+fontSizeValue.textContent = fontSizeSlider.value;
+fontWeightValue.textContent = fontWeightSlider.value;
+lineHeightValue.textContent = lineHeightSlider.value;
 updateDisplay();
 updateStyles();
 
