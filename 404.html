@@ -116,6 +116,14 @@
   <footer id="footer-copy"></footer>
 
   <script>
+    // README/LICENSE へのアクセス（大文字小文字問わず）を判定してリダイレクト
+    (function() {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('readme') || path.includes('license')) {
+        window.location.replace('./');
+      }
+    })();
+
     function luminance(r, g, b) {
       const values = [r, g, b].map((v) => {
         const normalized = v / 255;
