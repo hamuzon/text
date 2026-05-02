@@ -279,7 +279,7 @@ const initialState = {
 
 const appParamOrder = ["text","font","weight","size","line","color"];
 
-function buildAppStateParams(params){
+function buildAppStateParams(params, sourceParams = new URLSearchParams(window.location.search)){
   const current={
     text:textInput.value,
     font:fontSelector.value,
@@ -291,7 +291,8 @@ function buildAppStateParams(params){
   appParamOrder.forEach(key=>{
     const currentValue=key==="color"?current[key].toLowerCase():current[key];
     const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
-    if(currentValue!==initialValue) params.set(key,current[key]);
+    const hadKeyInURL = sourceParams.has(key);
+    if(hadKeyInURL || currentValue!==initialValue) params.set(key,current[key]);
   });
 }
 
@@ -357,14 +358,15 @@ function updateStyles(){
 
 // 表示更新
 function updateDisplay(){
-  displayArea.textContent = textInput.value.trim() || "test";
+  displayArea.textContent = textInput.value || "test";
 }
 
 // URL更新
 function updateURLParams(){
   const url = new URL(window.location.origin + window.location.pathname);
+  const sourceParams = new URLSearchParams(window.location.search);
   const params = new URLSearchParams();
-  buildAppStateParams(params);
+  buildAppStateParams(params, sourceParams);
   const preserved = getPreservedQueryParams();
   preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
@@ -408,8 +410,9 @@ accentSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); upda
 // Copy
 copyButton.addEventListener("click",()=>{
   const url=new URL(window.location.origin+window.location.pathname);
+  const sourceParams = new URLSearchParams(window.location.search);
   const params=new URLSearchParams();
-  buildAppStateParams(params);
+  buildAppStateParams(params, sourceParams);
   const preserved=getPreservedQueryParams();
   preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
