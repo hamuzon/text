@@ -278,15 +278,6 @@ const initialState = {
 };
 
 const appParamOrder = ["text","font","weight","size","line","color"];
-const trackingParamPatterns = [/^utm_/i, /^_hs/i, /^mkt_/i];
-const trackingParamNames = new Set(["gclid","fbclid","msclkid","yclid","mc_cid","mc_eid"]);
-
-function isTrackingParam(key){
-  const lowerKey = key.toLowerCase();
-  if(trackingParamNames.has(lowerKey)) return true;
-  return trackingParamPatterns.some(pattern=>pattern.test(key));
-}
-
 function buildAppStateParams(params){
   const current={
     text:textInput.value,
@@ -308,7 +299,6 @@ function getPreservedQueryParams(){
   const preserved = new URLSearchParams();
   currentParams.forEach((value,key)=>{
     if(appParamOrder.includes(key)) return;
-    if(isTrackingParam(key)) return;
     preserved.append(key, value);
   });
   return preserved;
