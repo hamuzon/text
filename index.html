@@ -277,6 +277,35 @@ const initialState = {
   colorText: "#000"
 };
 
+const appParamOrder = ["text","font","weight","size","line","color"];
+
+function buildAppStateParams(params){
+  const current={
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
+  appParamOrder.forEach(key=>{
+    const currentValue=key==="color"?current[key].toLowerCase():current[key];
+    const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
+    if(currentValue!==initialValue) params.set(key,current[key]);
+  });
+}
+
+function getPreservedQueryParams(){
+  const currentParams = new URLSearchParams(window.location.search);
+  const preserved = new URLSearchParams();
+  currentParams.forEach((value,key)=>{
+    if(appParamOrder.includes(key)) return;
+    preserved.append(key, value);
+  });
+  return preserved;
+}
+
+
 // コントラスト計算
 function luminance(r,g,b){
   const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
@@ -328,26 +357,30 @@ function updateStyles(){
 
 // 表示更新
 function updateDisplay(){
-  displayArea.textContent = textInput.value.trim() || "test";
+  displayArea.textContent = textInput.value || "test";
 }
 
 // URL更新
 function updateURLParams(){
-  const url = new URL(window.location);
-  const params = new URLSearchParams(url.search);
-  if(textInput.value!==initialState.text) params.set("text", textInput.value);
-  if(fontSelector.value!==initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value!==initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value!==initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value!==initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-  const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
-  window.history.replaceState({}, "", newURL);
+  const url = new URL(window.location.origin + window.location.pathname);
+  const params = new URLSearchParams();
+  buildAppStateParams(params);
+  const preserved = getPreservedQueryParams();
+  preserved.forEach((value,key)=>params.append(key,value));
+  url.search=params.toString();
+  window.history.replaceState({}, "", url.toString());
 }
 
 // ローカル保存・ロード
 function saveToLocal(){
-  const state={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
+  const state={
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
   localStorage.setItem('textAppState',JSON.stringify(state));
 }
 function loadFromLocal(){
@@ -363,31 +396,60 @@ function loadFromLocal(){
 // URLパラメータ読み込み
 function loadFromURL(){
   const params = new URLSearchParams(window.location.search);
-  if(params.get("text")) textInput.value = params.get("text");
-  if(params.get("font")) fontSelector.value = params.get("font");
-  if(params.get("weight")) fontWeightSlider.value = params.get("weight");
-  if(params.get("size")) fontSizeSlider.value = params.get("size");
-  if(params.get("line")) lineHeightSlider.value = params.get("line");
-  if(params.get("color")) accentSelector.value = params.get("color");
+  if(params.has("text")) textInput.value = params.get("text");
+  if(params.has("font")) fontSelector.value = params.get("font");
+  if(params.has("weight")) fontWeightSlider.value = params.get("weight");
+  if(params.has("size")) fontSizeSlider.value = params.get("size");
+  if(params.has("line")) lineHeightSlider.value = params.get("line");
+  if(params.has("color")) accentSelector.value = params.get("color");
 }
 
 // イベント
-textInput.addEventListener("input",()=>{updateDisplay(); saveToLocal(); updateURLParams();});
-fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-fontSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
-accentSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
+textInput.addEventListener("input",()=>{
+  updateDisplay();
+  saveToLocal();
+  updateURLParams();
+});
+fontSizeSlider.addEventListener("input",()=>{
+  fontSizeValue.textContent=fontSizeSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+fontWeightSlider.addEventListener("input",()=>{
+  fontWeightValue.textContent=fontWeightSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+lineHeightSlider.addEventListener("input",()=>{
+  lineHeightValue.textContent=lineHeightSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+fontSelector.addEventListener("input",()=>{
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+accentSelector.addEventListener("input",()=>{
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
 
 // Copy
 copyButton.addEventListener("click",()=>{
   const url=new URL(window.location.origin+window.location.pathname);
   const params=new URLSearchParams();
-  const order=["text","font","weight","size","line","color"];
-  const current={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
-  order.forEach(k=>{if(current[k]!==initialState[k]) params.set(k,current[k]);});
+  buildAppStateParams(params);
+  const preserved=getPreservedQueryParams();
+  preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
-  navigator.clipboard.writeText(url.toString()).then(()=>{alert("URLコピーしました");});
+  navigator.clipboard.writeText(url.toString()).then(()=>{
+    alert("URLコピーしました");
+  });
 });
 
 // Reset
@@ -417,6 +479,8 @@ fontWeightValue.textContent = fontWeightSlider.value;
 lineHeightValue.textContent = lineHeightSlider.value;
 updateDisplay();
 updateStyles();
+saveToLocal();
+updateURLParams();
 
 // フッター更新
 const footerAuthor=document.getElementById("footer-author");
