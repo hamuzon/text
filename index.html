@@ -277,9 +277,9 @@ const initialState = {
   colorText: "#000"
 };
 
-const appParamOrder = ["文字","font","weight","size","line","color"];
+const appParamOrder = ["text","font","weight","size","line","color"];
 const appParamAliases = {
-  "文字": ["文字", "text"],
+  text: ["text", "文字"],
   font: ["font"],
   weight: ["weight"],
   size: ["size"],
@@ -289,7 +289,7 @@ const appParamAliases = {
 
 function buildAppStateParams(params){
   const current={
-    "文字":textInput.value,
+    text:textInput.value,
     font:fontSelector.value,
     weight:fontWeightSlider.value,
     size:fontSizeSlider.value,
@@ -298,7 +298,7 @@ function buildAppStateParams(params){
   };
   appParamOrder.forEach(key=>{
     const currentValue=key==="color"?current[key].toLowerCase():current[key];
-    const initialValue=key==="color"?initialState[key].toLowerCase():(key==="文字"?initialState.text:initialState[key]);
+    const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
     if(currentValue!==initialValue) params.set(key,current[key]);
   });
 }
@@ -396,8 +396,8 @@ function loadFromLocal(){
 // URLパラメータ読み込み
 function loadFromURL(){
   const params = new URLSearchParams(window.location.search);
-  if(params.has("文字")) textInput.value = params.get("文字");
-  else if(params.has("text")) textInput.value = params.get("text");
+  if(params.has("text")) textInput.value = params.get("text");
+  else if(params.has("文字")) textInput.value = params.get("文字");
   if(params.has("font")) fontSelector.value = params.get("font");
   if(params.has("weight")) fontWeightSlider.value = params.get("weight");
   if(params.has("size")) fontSizeSlider.value = params.get("size");
