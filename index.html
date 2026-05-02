@@ -417,6 +417,8 @@ fontWeightValue.textContent = fontWeightSlider.value;
 lineHeightValue.textContent = lineHeightSlider.value;
 updateDisplay();
 updateStyles();
+saveToLocal();
+updateURLParams();
 
 // フッター更新
 const footerAuthor=document.getElementById("footer-author");
