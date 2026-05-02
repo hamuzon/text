@@ -373,7 +373,14 @@ function updateURLParams(){
 
 // ローカル保存・ロード
 function saveToLocal(){
-  const state={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
+  const state={
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
   localStorage.setItem('textAppState',JSON.stringify(state));
 }
 function loadFromLocal(){
@@ -398,12 +405,39 @@ function loadFromURL(){
 }
 
 // イベント
-textInput.addEventListener("input",()=>{updateDisplay(); saveToLocal(); updateURLParams();});
-fontSizeSlider.addEventListener("input",()=>{fontSizeValue.textContent=fontSizeSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-fontWeightSlider.addEventListener("input",()=>{fontWeightValue.textContent=fontWeightSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-lineHeightSlider.addEventListener("input",()=>{lineHeightValue.textContent=lineHeightSlider.value; updateStyles(); saveToLocal(); updateURLParams();});
-fontSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
-accentSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); updateURLParams();});
+textInput.addEventListener("input",()=>{
+  updateDisplay();
+  saveToLocal();
+  updateURLParams();
+});
+fontSizeSlider.addEventListener("input",()=>{
+  fontSizeValue.textContent=fontSizeSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+fontWeightSlider.addEventListener("input",()=>{
+  fontWeightValue.textContent=fontWeightSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+lineHeightSlider.addEventListener("input",()=>{
+  lineHeightValue.textContent=lineHeightSlider.value;
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+fontSelector.addEventListener("input",()=>{
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
+accentSelector.addEventListener("input",()=>{
+  updateStyles();
+  saveToLocal();
+  updateURLParams();
+});
 
 // Copy
 copyButton.addEventListener("click",()=>{
@@ -413,7 +447,9 @@ copyButton.addEventListener("click",()=>{
   const preserved=getPreservedQueryParams();
   preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
-  navigator.clipboard.writeText(url.toString()).then(()=>{alert("URLコピーしました");});
+  navigator.clipboard.writeText(url.toString()).then(()=>{
+    alert("URLコピーしました");
+  });
 });
 
 // Reset
