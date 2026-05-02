@@ -333,16 +333,24 @@ function updateDisplay(){
 
 // URL更新
 function updateURLParams(){
-  const url = new URL(window.location);
-  const params = new URLSearchParams(url.search);
-  if(textInput.value!==initialState.text) params.set("text", textInput.value);
-  if(fontSelector.value!==initialState.font) params.set("font", fontSelector.value);
-  if(fontWeightSlider.value!==initialState.weight) params.set("weight", fontWeightSlider.value);
-  if(fontSizeSlider.value!==initialState.size) params.set("size", fontSizeSlider.value);
-  if(lineHeightSlider.value!==initialState.line) params.set("line", lineHeightSlider.value);
-  if(accentSelector.value.toLowerCase()!==initialState.color.toLowerCase()) params.set("color", accentSelector.value);
-  const newURL = window.location.origin + window.location.pathname + "?" + params.toString();
-  window.history.replaceState({}, "", newURL);
+  const url = new URL(window.location.origin + window.location.pathname);
+  const params = new URLSearchParams();
+  const order=["text","font","weight","size","line","color"];
+  const current={
+    text:textInput.value,
+    font:fontSelector.value,
+    weight:fontWeightSlider.value,
+    size:fontSizeSlider.value,
+    line:lineHeightSlider.value,
+    color:accentSelector.value
+  };
+  order.forEach(key=>{
+    const currentValue=key==="color"?current[key].toLowerCase():current[key];
+    const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
+    if(currentValue!==initialValue) params.set(key,current[key]);
+  });
+  url.search=params.toString();
+  window.history.replaceState({}, "", url.toString());
 }
 
 // ローカル保存・ロード
@@ -385,7 +393,11 @@ copyButton.addEventListener("click",()=>{
   const params=new URLSearchParams();
   const order=["text","font","weight","size","line","color"];
   const current={text:textInput.value,font:fontSelector.value,weight:fontWeightSlider.value,size:fontSizeSlider.value,line:lineHeightSlider.value,color:accentSelector.value};
-  order.forEach(k=>{if(current[k]!==initialState[k]) params.set(k,current[k]);});
+  order.forEach(key=>{
+    const currentValue=key==="color"?current[key].toLowerCase():current[key];
+    const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
+    if(currentValue!==initialValue) params.set(key,current[key]);
+  });
   url.search=params.toString();
   navigator.clipboard.writeText(url.toString()).then(()=>{alert("URLコピーしました");});
 });
