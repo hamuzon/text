@@ -277,10 +277,19 @@ const initialState = {
   colorText: "#000"
 };
 
-const appParamOrder = ["text","font","weight","size","line","color"];
+const appParamOrder = ["文字","font","weight","size","line","color"];
+const appParamAliases = {
+  "文字": ["文字", "text"],
+  font: ["font"],
+  weight: ["weight"],
+  size: ["size"],
+  line: ["line"],
+  color: ["color"]
+};
+
 function buildAppStateParams(params){
   const current={
-    text:textInput.value,
+    "文字":textInput.value,
     font:fontSelector.value,
     weight:fontWeightSlider.value,
     size:fontSizeSlider.value,
@@ -289,7 +298,7 @@ function buildAppStateParams(params){
   };
   appParamOrder.forEach(key=>{
     const currentValue=key==="color"?current[key].toLowerCase():current[key];
-    const initialValue=key==="color"?initialState[key].toLowerCase():initialState[key];
+    const initialValue=key==="color"?initialState[key].toLowerCase():(key==="文字"?initialState.text:initialState[key]);
     if(currentValue!==initialValue) params.set(key,current[key]);
   });
 }
@@ -297,8 +306,9 @@ function buildAppStateParams(params){
 function getPreservedQueryParams(){
   const currentParams = new URLSearchParams(window.location.search);
   const preserved = new URLSearchParams();
+  const excludedKeys = new Set(Object.values(appParamAliases).flat());
   currentParams.forEach((value,key)=>{
-    if(appParamOrder.includes(key)) return;
+    if(excludedKeys.has(key)) return;
     preserved.append(key, value);
   });
   return preserved;
@@ -386,12 +396,13 @@ function loadFromLocal(){
 // URLパラメータ読み込み
 function loadFromURL(){
   const params = new URLSearchParams(window.location.search);
-  if(params.get("text")) textInput.value = params.get("text");
-  if(params.get("font")) fontSelector.value = params.get("font");
-  if(params.get("weight")) fontWeightSlider.value = params.get("weight");
-  if(params.get("size")) fontSizeSlider.value = params.get("size");
-  if(params.get("line")) lineHeightSlider.value = params.get("line");
-  if(params.get("color")) accentSelector.value = params.get("color");
+  if(params.has("文字")) textInput.value = params.get("文字");
+  else if(params.has("text")) textInput.value = params.get("text");
+  if(params.has("font")) fontSelector.value = params.get("font");
+  if(params.has("weight")) fontWeightSlider.value = params.get("weight");
+  if(params.has("size")) fontSizeSlider.value = params.get("size");
+  if(params.has("line")) lineHeightSlider.value = params.get("line");
+  if(params.has("color")) accentSelector.value = params.get("color");
 }
 
 // イベント
@@ -439,7 +450,6 @@ lineHeightValue.textContent = lineHeightSlider.value;
 updateDisplay();
 updateStyles();
 saveToLocal();
-updateURLParams();
 
 // フッター更新
 const footerAuthor=document.getElementById("footer-author");
