@@ -277,15 +277,7 @@ const initialState = {
   colorText: "#000"
 };
 
-const appParamOrder = ["text","font","size","weight","line","color"];
-const appParamAliases = {
-  text: ["text", "文字"],
-  font: ["font"],
-  weight: ["weight"],
-  size: ["size"],
-  line: ["line"],
-  color: ["color"]
-};
+const appParamOrder = ["text","font","weight","size","line","color"];
 
 function buildAppStateParams(params){
   const current={
@@ -306,9 +298,8 @@ function buildAppStateParams(params){
 function getPreservedQueryParams(){
   const currentParams = new URLSearchParams(window.location.search);
   const preserved = new URLSearchParams();
-  const excludedKeys = new Set(Object.values(appParamAliases).flat());
   currentParams.forEach((value,key)=>{
-    if(excludedKeys.has(key)) return;
+    if(appParamOrder.includes(key)) return;
     preserved.append(key, value);
   });
   return preserved;
@@ -372,8 +363,10 @@ function updateDisplay(){
 // URL更新
 function updateURLParams(){
   const url = new URL(window.location.origin + window.location.pathname);
-  const params = getPreservedQueryParams();
+  const params = new URLSearchParams();
   buildAppStateParams(params);
+  const preserved = getPreservedQueryParams();
+  preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
   window.history.replaceState({}, "", url.toString());
 }
@@ -397,7 +390,6 @@ function loadFromLocal(){
 function loadFromURL(){
   const params = new URLSearchParams(window.location.search);
   if(params.has("text")) textInput.value = params.get("text");
-  else if(params.has("文字")) textInput.value = params.get("文字");
   if(params.has("font")) fontSelector.value = params.get("font");
   if(params.has("weight")) fontWeightSlider.value = params.get("weight");
   if(params.has("size")) fontSizeSlider.value = params.get("size");
@@ -416,8 +408,10 @@ accentSelector.addEventListener("input",()=>{updateStyles(); saveToLocal(); upda
 // Copy
 copyButton.addEventListener("click",()=>{
   const url=new URL(window.location.origin+window.location.pathname);
-  const params=getPreservedQueryParams();
+  const params=new URLSearchParams();
   buildAppStateParams(params);
+  const preserved=getPreservedQueryParams();
+  preserved.forEach((value,key)=>params.append(key,value));
   url.search=params.toString();
   navigator.clipboard.writeText(url.toString()).then(()=>{alert("URLコピーしました");});
 });
@@ -450,6 +444,7 @@ lineHeightValue.textContent = lineHeightSlider.value;
 updateDisplay();
 updateStyles();
 saveToLocal();
+updateURLParams();
 
 // フッター更新
 const footerAuthor=document.getElementById("footer-author");
