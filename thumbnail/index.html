@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Thumbnail URL Generator / YouTube サムネURL取得</title>
+<link rel="icon" href="https://hamusata.f5.si/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Potta+One&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Potta One',Arial,sans-serif;
+  background:#fdf6e3;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding: 1rem;
+}
+.content{
+  width:100%;
+  max-width:600px;
+  background:rgba(255,255,255,0.3);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:2rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+input,select,textarea,button{
+  width:100%;
+  padding:0.7rem;
+  border-radius:12px;
+  border:1px solid rgba(59,47,47,0.3);
+  background:rgba(255,255,255,0.3);
+  font-family:'Potta One',Arial,sans-serif;
+}
+button{cursor:pointer;font-weight:bold;}
+img.preview{
+  width:100%;
+  border-radius:12px;
+  display:none;
+}
+a {
+  color: #854c30;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+a:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+@media (max-width: 480px) {
+  .content { padding: 1.5rem; }
+  h1 { font-size: 1.6rem; }
+}
+#footer-copy {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="content">
+  <h1>YouTube サムネURL取得</h1>
+
+  <input id="inputUrl" type="text" placeholder="YouTube URL / ID / サムネURL">
+
+  <select id="sizeSelect" aria-label="サムネイルサイズ">
+    <option value="maxresdefault">maxresdefault（最高画質）</option>
+    <option value="sddefault">sddefault</option>
+    <option value="hqdefault" selected>hqdefault（推奨）</option>
+    <option value="mqdefault">mqdefault</option>
+    <option value="default">default（最小）</option>
+    <option value="1">動画の開始 (120 × 90)</option>
+    <option value="2">動画の中間 (120 × 90)</option>
+    <option value="3">動画の終了 (120 × 90)</option>
+  </select>
+
+  <button id="generateBtn">生成</button>
+  <button id="copyBtn">URLコピー</button>
+
+  <textarea id="outputUrl" rows="2" readonly placeholder="サムネイルURL"></textarea>
+
+  <img id="preview" class="preview">
+  <div id="footer-copy"></div>
+</div>
+<script>
+const footer = document.getElementById("footer-copy");
+const baseYear = 2025;
+const currentYear = new Date().getFullYear();
+const yearString = `${baseYear}${currentYear > baseYear ? "~" + currentYear : ""}`;
+const hostname = location.hostname;
+let footerHTML = "";
+if (hostname === "hamuzon.github.io") {
+    footerHTML = `&copy; ${yearString} <a class="link" href="https://hamuzon.github.io" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+} else if (hostname.includes("hamuzon-jp.f5.si")) {
+    footerHTML = `&copy; ${yearString} <a class="link" href="https://hamuzon-jp.f5.si" target="_blank" rel="noopener noreferrer">@hamuzon</a>`;
+} else if (hostname.includes("hamusata.f5.si")) {
+    footerHTML = `&copy; ${yearString} <a class="link" href="https://hamusata.f5.si" target="_blank" rel="noopener noreferrer">@hamusata</a>`;
+} else {
+    footerHTML = `&copy; ${yearString} YouTube Thumbnail URL Generator / YouTube サムネURL取得`;
+}
+if(footer) footer.innerHTML = footerHTML;
+
+function getVideoId(input){
+  if(!input) return null;
+  input = input.trim();
+  if(/^[a-zA-Z0-9_-]{11}$/.test(input)){
+    return input;
+  }
+  const thumb = input.match(/(?:i\.ytimg\.com|img\.youtube\.com)\/vi\/([a-zA-Z0-9_-]{11})/);
+  if(thumb) return thumb[1];
+  try{
+    const u = new URL(input);
+    if(u.hostname === 'youtu.be'){
+      const id = u.pathname.split('/')[1];
+      if(/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+    }
+    const isYouTubeDomain = u.hostname === "youtube.com" || u.hostname.endsWith(".youtube.com") || /(^|\.)youtube\.[a-z]{2,}(?:\.[a-z]{2})?$/i.test(u.hostname);
+    if(isYouTubeDomain){
+      const v = u.searchParams.get('v');
+      if(v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+
+      const shorts = u.pathname.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+      if(shorts) return shorts[1];
+
+      const embed = u.pathname.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+      if(embed) return embed[1];
+
+      const live = u.pathname.match(/\/live\/([a-zA-Z0-9_-]{11})/);
+      if(live) return live[1];
+    }
+  }catch{}
+  return null;
+}
+const inputUrl = document.getElementById('inputUrl');
+const sizeSelect = document.getElementById('sizeSelect');
+const output = document.getElementById('outputUrl');
+const preview = document.getElementById('preview');
+function loadThumbnail(videoId, size){
+  const url = `https://i.ytimg.com/vi/${videoId}/${size}.jpg`;
+  preview.onerror = null;
+  preview.onerror = () => {
+    if(size === 'maxresdefault'){
+      const fallback = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      output.value = fallback;
+      preview.src = fallback;
+    }
+  };
+
+  preview.src = url;
+  preview.style.display = 'block';
+  output.value = url;
+}
+document.getElementById('generateBtn').addEventListener('click', ()=>{
+  const id = getVideoId(inputUrl.value);
+  if(!id){
+    output.value = '無効なURLまたはID';
+    preview.style.display='none';
+    return;
+  }
+  loadThumbnail(id, sizeSelect.value);
+});
+document.getElementById('copyBtn').addEventListener('click', ()=>{
+  output.select();
+  document.execCommand('copy');
+  alert('Copied!');
+});
+</script>
+
+</body>
+</html>
