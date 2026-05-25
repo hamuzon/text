@@ -105,6 +105,7 @@ button {
 }
 
 #copyButton { background-color: var(--color-primary); color: #fff; }
+#clearButton { background-color: #8a6d1d; color: #fff; }
 #resetButton { background-color: var(--color-secondary); color: #fff; }
 
 #settings {
@@ -162,6 +163,7 @@ footer#footer a:hover { text-decoration: underline; }
 <div id="displayArea">test</div>
 <div id="buttons">
   <button id="copyButton">Copy URL</button>
+  <button id="clearButton">Clear Text</button>
   <button id="resetButton">Reset</button>
 </div>
 </section>
@@ -264,6 +266,7 @@ const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
 const copyButton = document.getElementById("copyButton");
+const clearButton = document.getElementById("clearButton");
 const resetButton = document.getElementById("resetButton");
 
 const initialState = {
@@ -344,6 +347,9 @@ function updateStyles(){
   copyButton.style.backgroundColor = accent;
   copyButton.style.color = getContrastColor(accent);
   copyButton.style.border = `1px solid ${edgeColor}`;
+  clearButton.style.backgroundColor = accent;
+  clearButton.style.color = getContrastColor(accent);
+  clearButton.style.border = `1px solid ${edgeColor}`;
   resetButton.style.backgroundColor = accent;
   resetButton.style.color = getContrastColor(accent);
   resetButton.style.border = `1px solid ${edgeColor}`;
@@ -450,6 +456,14 @@ copyButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(url.toString()).then(()=>{
     alert("URLコピーしました");
   });
+});
+
+// Clear Text
+clearButton.addEventListener("click",()=>{
+  textInput.value="";
+  updateDisplay();
+  saveToLocal();
+  updateURLParams();
 });
 
 // Reset
