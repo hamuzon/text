@@ -17,6 +17,8 @@
   --color-background: #ffffff;
   --color-on-background: #1a1c19;
   --shape-corner-medium: 12px;
+  --content-max-width: 900px;
+  --buttons-max-width: 640px;
 }
 
 * { box-sizing: border-box; }
@@ -46,18 +48,32 @@ header {
 main {
   flex-grow: 1;
   width: 100%;
-  max-width: 900px;
-  margin: 1.5rem auto;
-  padding: 0 1rem;
+  max-width: calc(var(--content-max-width) + 2rem);
+  margin: clamp(1rem, 3vw, 1.5rem) auto;
+  padding: 0 clamp(1rem, 4vw, 1.5rem);
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-section { display: flex; flex-direction: column; gap: 1rem; }
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+section h2 {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
 
 textarea#textInput {
   width: 100%;
+  max-width: var(--content-max-width);
   font-size: clamp(1.5rem,5vw,2.5rem);
   min-height: 140px;
   padding: 1rem;
@@ -71,6 +87,7 @@ textarea#textInput {
 
 #displayArea {
   width: 100%;
+  max-width: var(--content-max-width);
   font-size: clamp(2rem,10vw,8rem);
   font-weight: 600;
   line-height: 1.4;
@@ -87,16 +104,21 @@ textarea#textInput {
   transition: all 0.2s ease;
 }
 
-#buttons {
-  display: flex;
-  gap: 1rem;
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1rem);
   justify-content: center;
-  margin-top: 0.5rem;
+  width: 100%;
+  max-width: var(--buttons-max-width);
+  margin: 0 auto;
 }
 
 button {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem clamp(0.75rem, 2vw, 1.2rem);
+  font-size: clamp(0.95rem, 2.5vw, 1rem);
   border-radius: var(--shape-corner-medium);
   border: none;
   cursor: pointer;
@@ -104,9 +126,9 @@ button {
   transition: all 0.2s ease;
 }
 
-#copyButton { background-color: var(--color-primary); color: #fff; }
-#clearButton { background-color: #8a6d1d; color: #fff; }
-#resetButton { background-color: var(--color-secondary); color: #fff; }
+.copyButton { background-color: var(--color-primary); color: #fff; }
+.clearButton { background-color: #8a6d1d; color: #fff; }
+.resetButton { background-color: var(--color-secondary); color: #fff; }
 
 #settings {
   display: flex;
@@ -146,6 +168,13 @@ footer#footer a {
 }
 
 footer#footer a:hover { text-decoration: underline; }
+
+@media (max-width: 560px) {
+  .buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -158,13 +187,19 @@ footer#footer a:hover { text-decoration: underline; }
 <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
 </section>
 
+<div class="buttons">
+  <button class="copyButton" type="button">Copy URL</button>
+  <button class="clearButton" type="button">Clear Text</button>
+  <button class="resetButton" type="button">Reset</button>
+</div>
+
 <section>
 <h2>出力</h2>
 <div id="displayArea">test</div>
-<div id="buttons">
-  <button id="copyButton">Copy URL</button>
-  <button id="clearButton">Clear Text</button>
-  <button id="resetButton">Reset</button>
+<div class="buttons">
+  <button class="copyButton" type="button">Copy URL</button>
+  <button class="clearButton" type="button">Clear Text</button>
+  <button class="resetButton" type="button">Reset</button>
 </div>
 </section>
 
@@ -265,9 +300,9 @@ const lineHeightSlider = document.getElementById("lineHeightSlider");
 const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
-const copyButton = document.getElementById("copyButton");
-const clearButton = document.getElementById("clearButton");
-const resetButton = document.getElementById("resetButton");
+const copyButtons = document.querySelectorAll(".copyButton");
+const clearButtons = document.querySelectorAll(".clearButton");
+const resetButtons = document.querySelectorAll(".resetButton");
 
 const initialState = {
   text: "",
@@ -344,15 +379,21 @@ function updateStyles(){
   header.style.backgroundColor = accent;
   header.style.color = getContrastColor(accent);
   header.style.borderBottom = `2px solid ${edgeColor}`;
-  copyButton.style.backgroundColor = accent;
-  copyButton.style.color = getContrastColor(accent);
-  copyButton.style.border = `1px solid ${edgeColor}`;
-  clearButton.style.backgroundColor = accent;
-  clearButton.style.color = getContrastColor(accent);
-  clearButton.style.border = `1px solid ${edgeColor}`;
-  resetButton.style.backgroundColor = accent;
-  resetButton.style.color = getContrastColor(accent);
-  resetButton.style.border = `1px solid ${edgeColor}`;
+  copyButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
+  clearButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
+  resetButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
 
   document.body.style.backgroundColor = initialState.background;
   displayArea.style.backgroundColor = initialState.background;
@@ -446,7 +487,7 @@ accentSelector.addEventListener("input",()=>{
 });
 
 // Copy
-copyButton.addEventListener("click",()=>{
+copyButtons.forEach(button=>button.addEventListener("click",()=>{
   const url=new URL(window.location.origin+window.location.pathname);
   const params=new URLSearchParams();
   buildAppStateParams(params);
@@ -456,18 +497,18 @@ copyButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(url.toString()).then(()=>{
     alert("URLコピーしました");
   });
-});
+}));
 
 // Clear Text
-clearButton.addEventListener("click",()=>{
+clearButtons.forEach(button=>button.addEventListener("click",()=>{
   textInput.value="";
   updateDisplay();
   saveToLocal();
   updateURLParams();
-});
+}));
 
 // Reset
-resetButton.addEventListener("click",()=>{
+resetButtons.forEach(button=>button.addEventListener("click",()=>{
   textInput.value=initialState.text;
   fontSelector.value=initialState.font;
   fontWeightSlider.value=initialState.weight;
@@ -483,7 +524,7 @@ resetButton.addEventListener("click",()=>{
   const url=window.location.origin+window.location.pathname;
   window.history.replaceState({}, "", url);
   localStorage.removeItem('textAppState');
-});
+}));
 
 // 初期ロード
 loadFromLocal();
