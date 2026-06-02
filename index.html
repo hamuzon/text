@@ -87,7 +87,7 @@ textarea#textInput {
   transition: all 0.2s ease;
 }
 
-#buttons {
+.buttons {
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -104,9 +104,9 @@ button {
   transition: all 0.2s ease;
 }
 
-#copyButton { background-color: var(--color-primary); color: #fff; }
-#clearButton { background-color: #8a6d1d; color: #fff; }
-#resetButton { background-color: var(--color-secondary); color: #fff; }
+.copyButton { background-color: var(--color-primary); color: #fff; }
+.clearButton { background-color: #8a6d1d; color: #fff; }
+.resetButton { background-color: var(--color-secondary); color: #fff; }
 
 #settings {
   display: flex;
@@ -156,15 +156,20 @@ footer#footer a:hover { text-decoration: underline; }
 <section>
 <h2>入力</h2>
 <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
+<div class="buttons" aria-label="入力操作">
+  <button class="copyButton" type="button">Copy URL</button>
+  <button class="clearButton" type="button">Clear Text</button>
+  <button class="resetButton" type="button">Reset</button>
+</div>
 </section>
 
 <section>
 <h2>出力</h2>
 <div id="displayArea">test</div>
-<div id="buttons">
-  <button id="copyButton">Copy URL</button>
-  <button id="clearButton">Clear Text</button>
-  <button id="resetButton">Reset</button>
+<div class="buttons" aria-label="出力操作">
+  <button class="copyButton" type="button">Copy URL</button>
+  <button class="clearButton" type="button">Clear Text</button>
+  <button class="resetButton" type="button">Reset</button>
 </div>
 </section>
 
@@ -265,9 +270,9 @@ const lineHeightSlider = document.getElementById("lineHeightSlider");
 const lineHeightValue = document.getElementById("lineHeightValue");
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
-const copyButton = document.getElementById("copyButton");
-const clearButton = document.getElementById("clearButton");
-const resetButton = document.getElementById("resetButton");
+const copyButtons = document.querySelectorAll(".copyButton");
+const clearButtons = document.querySelectorAll(".clearButton");
+const resetButtons = document.querySelectorAll(".resetButton");
 
 const initialState = {
   text: "",
@@ -344,15 +349,21 @@ function updateStyles(){
   header.style.backgroundColor = accent;
   header.style.color = getContrastColor(accent);
   header.style.borderBottom = `2px solid ${edgeColor}`;
-  copyButton.style.backgroundColor = accent;
-  copyButton.style.color = getContrastColor(accent);
-  copyButton.style.border = `1px solid ${edgeColor}`;
-  clearButton.style.backgroundColor = accent;
-  clearButton.style.color = getContrastColor(accent);
-  clearButton.style.border = `1px solid ${edgeColor}`;
-  resetButton.style.backgroundColor = accent;
-  resetButton.style.color = getContrastColor(accent);
-  resetButton.style.border = `1px solid ${edgeColor}`;
+  copyButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
+  clearButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
+  resetButtons.forEach(button=>{
+    button.style.backgroundColor = accent;
+    button.style.color = getContrastColor(accent);
+    button.style.border = `1px solid ${edgeColor}`;
+  });
 
   document.body.style.backgroundColor = initialState.background;
   displayArea.style.backgroundColor = initialState.background;
@@ -446,7 +457,7 @@ accentSelector.addEventListener("input",()=>{
 });
 
 // Copy
-copyButton.addEventListener("click",()=>{
+copyButtons.forEach(button=>button.addEventListener("click",()=>{
   const url=new URL(window.location.origin+window.location.pathname);
   const params=new URLSearchParams();
   buildAppStateParams(params);
@@ -456,18 +467,18 @@ copyButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(url.toString()).then(()=>{
     alert("URLコピーしました");
   });
-});
+}));
 
 // Clear Text
-clearButton.addEventListener("click",()=>{
+clearButtons.forEach(button=>button.addEventListener("click",()=>{
   textInput.value="";
   updateDisplay();
   saveToLocal();
   updateURLParams();
-});
+}));
 
 // Reset
-resetButton.addEventListener("click",()=>{
+resetButtons.forEach(button=>button.addEventListener("click",()=>{
   textInput.value=initialState.text;
   fontSelector.value=initialState.font;
   fontWeightSlider.value=initialState.weight;
@@ -483,7 +494,7 @@ resetButton.addEventListener("click",()=>{
   const url=window.location.origin+window.location.pathname;
   window.history.replaceState({}, "", url);
   localStorage.removeItem('textAppState');
-});
+}));
 
 // 初期ロード
 loadFromLocal();
