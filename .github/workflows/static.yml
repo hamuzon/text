@@ -6,11 +6,6 @@ on:
   push:
     branches: ["main"]
 
-  workflow_run:
-    workflows: ["Update Sitemap"]
-    types:
-      - completed
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -29,7 +24,6 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
-    if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,11 +37,11 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Inject FQDN normalization script
         run: |
-          # 全てのHTMLファイルの<head>直後に正規化スクリプトを挿入
+          # 全てのHTMLファイルの<head>直後に挿入
           find . -maxdepth 1 -name "*.html" -not -name "google*.html" -exec sed -i '/<head>/a \  <script>if(window.location.hostname.endsWith(".")){window.location.replace(window.location.href.replace(window.location.hostname,window.location.hostname.slice(0,-1)));}</script>' {} +
       - name: Remove sensitive files from deployment artifact
         run: |
-          # デプロイ対象からのみ削除
+          # デプロイ対象から削除
           rm -rf functions README.md README readme.md license LICENSE LICENSE.txt _redirects.md _redirects
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
