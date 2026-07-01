@@ -1,11 +1,13 @@
 :root {
+  --color-primary: #00793d;
   --color-secondary: #4a6354;
   --color-background: #ffffff;
   --color-on-background: #1a1c19;
   --shape-corner-medium: 12px;
 
   --accent: #00793d;
-  --accent-text: #ffffff;
+  --accent-edge: #00793d;
+  --accent-contrast: #ffffff;
 }
 
 * {
@@ -26,12 +28,13 @@ body {
 
 header {
   background-color: var(--accent);
-  color: var(--accent-text);
+  color: var(--accent-contrast);
   padding: 1.5rem 1rem;
   font-weight: 700;
   font-size: clamp(1.8rem, 6vw, 2.2rem);
   text-align: center;
   letter-spacing: 0.08em;
+  border-bottom: 2px solid var(--accent-edge);
 }
 
 main {
@@ -53,33 +56,41 @@ section {
 
 textarea#textInput {
   width: 100%;
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-size: 1.2rem;
   min-height: 140px;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
-  border: 2px solid var(--accent);
+  border: 2px solid var(--accent-edge);
   resize: vertical;
   background-color: var(--color-background);
   color: var(--color-on-background);
-  transition: 0.2s ease;
 }
 
 #displayArea {
   width: 100%;
-  font-size: clamp(2rem, 10vw, 8rem);
-  font-weight: 600;
-  line-height: 1.4;
+  min-height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
   padding: 1rem;
+
   border-radius: var(--shape-corner-medium);
+  border: 2px solid var(--accent-edge);
+  box-shadow: 0 0 16px var(--accent-edge);
+
   background-color: var(--color-background);
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--color-on-background);
+
   white-space: pre-wrap;
   word-break: break-word;
-  overflow-wrap: break-word;
-  overflow-x: hidden;
-  color: var(--color-on-background);
-  transition: 0.2s ease;
+  overflow-wrap: anywhere;
+
+  /* ここが本体（CSSだけで自動スケール） */
+  font-size: clamp(1.5rem, 6vw, 8rem);
+  line-height: 1.2;
 }
 
 .button-row {
@@ -87,25 +98,17 @@ textarea#textInput {
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
-  width: 100%;
-  margin-top: 0.5rem;
 }
 
 button {
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   border-radius: var(--shape-corner-medium);
-  border: none;
+  border: 1px solid var(--accent-edge);
   cursor: pointer;
   font-weight: 600;
-  transition: 0.2s ease;
-}
-
-.copy-button,
-.clear-button,
-.reset-button {
-  background-color: var(--accent);
-  color: var(--accent-text);
+  background: var(--accent);
+  color: var(--accent-contrast);
 }
 
 #settings {
@@ -113,7 +116,6 @@ button {
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
-  align-items: flex-start;
 }
 
 .setting-item {
@@ -121,62 +123,26 @@ button {
   flex-direction: column;
   align-items: center;
   min-width: 140px;
-  flex: 1 1 160px;
 }
 
 .setting-item label {
   font-weight: 600;
   margin-bottom: 0.5rem;
-  text-align: center;
 }
 
-.setting-item input[type="range"],
-.setting-item select,
-.setting-item input[type="color"] {
+.setting-item input,
+.setting-item select {
   width: 100%;
-}
-
-h2 {
-  width: 100%;
-  text-align: center;
 }
 
 footer#footer {
   text-align: center;
   font-size: 0.85rem;
   color: var(--color-secondary);
-  padding: 1.5rem 0 2.5rem 0;
+  padding: 1.5rem 0 2.5rem;
 }
 
 footer#footer a {
   color: var(--accent);
   text-decoration: none;
-}
-
-footer#footer a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-  main {
-    gap: 1.8rem;
-  }
-
-  .setting-item {
-    min-width: 100%;
-  }
-
-  .button-row {
-    gap: 0.6rem;
-  }
-
-  button {
-    flex: 1 1 auto;
-  }
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-  #displayArea {
-    box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 35%, transparent);
-  }
 }
