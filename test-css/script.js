@@ -2,185 +2,174 @@ const textInput = document.getElementById("textInput");
 const displayArea = document.getElementById("displayArea");
 const header = document.getElementById("appTitle");
 
-const fontSizeSlider = document.getElementById("fontSizeSlider");
-const fontSizeValue = document.getElementById("fontSizeValue");
-
 const fontWeightSlider = document.getElementById("fontWeightSlider");
 const fontWeightValue = document.getElementById("fontWeightValue");
-
 const lineHeightSlider = document.getElementById("lineHeightSlider");
 const lineHeightValue = document.getElementById("lineHeightValue");
-
 const fontSelector = document.getElementById("fontSelector");
 const accentSelector = document.getElementById("accentSelector");
 
 const copyButtons = document.querySelectorAll('[data-action="copy"]');
 const clearButtons = document.querySelectorAll('[data-action="clear"]');
 const resetButtons = document.querySelectorAll('[data-action="reset"]');
+const actionButtons = document.querySelectorAll("[data-action]");
 
 const initialState = {
   text: "",
   font: "'Noto Serif JP', serif",
   weight: "600",
-  size: "120",
   line: "1.4",
   color: "#00793d"
 };
 
-const appParamOrder = ["text","font","weight","size","line","color"];
+const root = document.documentElement;
 
-function buildAppStateParams(params){
-  const current = {
-    text: textInput.value,
-    font: fontSelector.value,
-    weight: fontWeightSlider.value,
-    size: fontSizeSlider.value,
-    line: lineHeightSlider.value,
-    color: accentSelector.value
-  };
-
-  appParamOrder.forEach(key=>{
-    if(current[key] !== initialState[key]){
-      params.set(key, current[key]);
-    }
+function luminance(r, g, b) {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
   });
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
 }
 
-function applyAccent(color){
-  document.documentElement.style.setProperty("--accent", color);
+function getContrast(hex) {
+  const r = parseInt(hex.substr(1, 2), 16);
+  const g = parseInt(hex.substr(3, 2), 16);
+  const b = parseInt(hex.substr(5, 2), 16);
+  return luminance(r, g, b) > 0.5 ? "#000" : "#fff";
 }
 
-// contrast
-function luminance(r,g,b){
-  const a=[r,g,b].map(v=>{
-    v/=255;
-    return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);
-  });
-  return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+function getEdge(hex) {
+  const r = parseInt(hex.substr(1, 2), 16);
+  const g = parseInt(hex.substr(3, 2), 16);
+  const b = parseInt(hex.substr(5, 2), 16);
+  return luminance(r, g, b) > 0.9 ? "#b8b8b8" : hex;
 }
 
-function getContrastColor(hex){
-  const r=parseInt(hex.slice(1,3),16);
-  const g=parseInt(hex.slice(3,5),16);
-  const b=parseInt(hex.slice(5,7),16);
-  return luminance(r,g,b)>0.5?"#000":"#fff";
+function applyAccent(color) {
+  root.style.setProperty("--accent", color);
+  root.style.setProperty("--accent-edge", getEdge(color));
+  root.style.setProperty("--accent-contrast", getContrast(color));
 }
 
-function updateStyles(){
-  displayArea.style.fontSize = fontSizeSlider.value + "px";
-  displayArea.style.fontWeight = fontWeightSlider.value;
-  displayArea.style.lineHeight = fontHeightFix(lineHeightSlider.value);
-  displayArea.style.fontFamily = fontSelector.value;
-
-  applyAccent(accentSelector.value);
-
-  const c = getContrastColor(accentSelector.value);
-  document.documentElement.style.setProperty("--accent-text", c);
-}
-
-function fontHeightFix(v){
-  return Math.max(1, Math.min(2, Number(v)));
-}
-
-function updateDisplay(){
+function updateDisplay() {
   displayArea.textContent = textInput.value || "test";
 }
 
-function saveToLocal(){
-  localStorage.setItem("textAppState", JSON.stringify({
-    text:textInput.value,
-    font:fontSelector.value,
-    weight:fontWeightSlider.value,
-    size:fontSizeSlider.value,
-    line:lineHeightSlider.value,
-    color:accentSelector.value
-  }));
+function updateUI() {
+  displayArea.style.fontWeight = fontWeightSlider.value;
+  displayArea.style.lineHeight = lineHeightSlider.value;
+  displayArea.style.fontFamily = fontSelector.value;
 }
 
-function loadFromLocal(){
-  const s = JSON.parse(localStorage.getItem("textAppState")||"{}");
-  if(s.text) textInput.value = s.text;
-  if(s.font) fontSelector.value = s.font;
-  if(s.weight) fontWeightSlider.value = s.weight;
-  if(s.size) fontSizeSlider.value = s.size;
-  if(s.line) lineHeightSlider.value = s.line;
-  if(s.color) accentSelector.value = s.color;
+function saveToLocal() {
+  const state = {
+    text: textInput.value,
+    font: fontSelector.value,
+    weight: fontWeightSlider.value,
+    line: lineHeightSlider.value,
+    color: accentSelector.value
+  };
+  localStorage.setItem("textAppState", JSON.stringify(state));
 }
 
-textInput.addEventListener("input", ()=>{
+function loadFromLocal() {
+  const state = JSON.parse(localStorage.getItem("textAppState") || "{}");
+
+  if (state.text) textInput.value = state.text;
+  if (state.font) fontSelector.value = state.font;
+  if (state.weight) fontWeightSlider.value = state.weight;
+  if (state.line) lineHeightSlider.value = state.line;
+  if (state.color) accentSelector.value = state.color;
+}
+
+function updateSlidersUI() {
+  fontWeightValue.textContent = fontWeightSlider.value;
+  lineHeightValue.textContent = lineHeightSlider.value;
+}
+
+textInput.addEventListener("input", () => {
   updateDisplay();
   saveToLocal();
 });
 
-fontSizeSlider.addEventListener("input", ()=>{
-  fontSizeValue.textContent = fontSizeSlider.value;
-  updateStyles();
+fontWeightSlider.addEventListener("input", () => {
+  updateSlidersUI();
+  updateUI();
   saveToLocal();
 });
 
-fontWeightSlider.addEventListener("input", ()=>{
-  fontWeightValue.textContent = fontWeightSlider.value;
-  updateStyles();
+lineHeightSlider.addEventListener("input", () => {
+  updateSlidersUI();
+  updateUI();
   saveToLocal();
 });
 
-lineHeightSlider.addEventListener("input", ()=>{
-  lineHeightValue.textContent = lineHeightSlider.value;
-  updateStyles();
+fontSelector.addEventListener("input", () => {
+  updateUI();
   saveToLocal();
 });
 
-fontSelector.addEventListener("input", ()=>{
-  updateStyles();
+accentSelector.addEventListener("input", () => {
+  applyAccent(accentSelector.value);
   saveToLocal();
 });
 
-accentSelector.addEventListener("input", ()=>{
-  updateStyles();
-  saveToLocal();
-});
-
-copyButtons.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    const url = new URL(location.href);
+copyButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const url = new URL(window.location.href);
     const params = new URLSearchParams();
-    buildAppStateParams(params);
+
+    const state = {
+      text: textInput.value,
+      font: fontSelector.value,
+      weight: fontWeightSlider.value,
+      line: lineHeightSlider.value,
+      color: accentSelector.value
+    };
+
+    Object.entries(state).forEach(([k, v]) => params.set(k, v));
+
     url.search = params.toString();
-    navigator.clipboard.writeText(url.toString());
+
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      alert("URLコピーしました");
+    });
   });
 });
 
-clearButtons.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
+clearButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
     textInput.value = "";
     updateDisplay();
     saveToLocal();
   });
 });
 
-resetButtons.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
+resetButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
     textInput.value = initialState.text;
     fontSelector.value = initialState.font;
     fontWeightSlider.value = initialState.weight;
-    fontSizeSlider.value = initialState.size;
     lineHeightSlider.value = initialState.line;
     accentSelector.value = initialState.color;
 
+    applyAccent(initialState.color);
+
     updateDisplay();
-    updateStyles();
+    updateUI();
+    updateSlidersUI();
     saveToLocal();
   });
 });
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
   loadFromLocal();
 
-  fontSizeValue.textContent = fontSizeSlider.value;
-  fontWeightValue.textContent = fontWeightSlider.value;
-  lineHeightValue.textContent = lineHeightSlider.value;
-
   updateDisplay();
-  updateStyles();
+  updateUI();
+  updateSlidersUI();
+
+  applyAccent(accentSelector.value);
   saveToLocal();
 });
