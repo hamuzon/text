@@ -59,13 +59,7 @@ textarea#textInput {
   resize: vertical;
   background-color: var(--color-background);
   color: var(--color-on-background);
-  transition: all 0.2s ease;
   outline: none;
-}
-
-textarea#textInput:focus {
-  border-color: color-mix(in srgb, var(--color-primary) 60%, black);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 #displayArea {
@@ -77,7 +71,7 @@ textarea#textInput:focus {
   border-radius: var(--shape-corner-medium);
   background-color: var(--color-background);
   border: 2px solid var(--color-primary);
-  box-shadow: 0 0 16px var(--color-primary);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.08);
   white-space: pre-wrap;
   word-break: break-word;
   color: #000;
@@ -99,11 +93,6 @@ button {
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
 }
 
 .copy-button {
@@ -132,12 +121,11 @@ button:hover {
 .setting-item {
   width: 100%;
   max-width: 220px;
-  min-height: 120px;
+  min-height: 110px;
   padding: 0.6rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  align-items: stretch;
 }
 
 .setting-item label {
@@ -150,12 +138,10 @@ button:hover {
 .setting-item select,
 .setting-item input[type="color"] {
   width: 100%;
-  display: block;
 }
 
 .setting-item output {
   text-align: center;
-  font-variant-numeric: tabular-nums;
 }
 
 footer#footer {
@@ -172,41 +158,4 @@ footer#footer a {
 
 footer#footer a:hover {
   text-decoration: underline;
-}
-
-@supports selector(:has(*)) {
-  body:has(textarea:focus) header {
-    filter: brightness(1.1);
-  }
-
-  .button-row:has(button:hover) {
-    transform: scale(1.02);
-  }
-
-  section:has(textarea:focus) {
-    outline: 2px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
-    border-radius: var(--shape-corner-medium);
-  }
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-  button {
-    background: color-mix(in srgb, var(--color-primary) 85%, white);
-  }
-
-  textarea#textInput {
-    border-color: color-mix(in srgb, var(--color-primary) 70%, black);
-  }
-}
-
-@supports (text-wrap: balance) {
-  header {
-    text-wrap: balance;
-  }
-}
-
-@supports (field-sizing: content) {
-  textarea#textInput {
-    field-sizing: content;
-  }
 }
