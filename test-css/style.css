@@ -1,9 +1,11 @@
 :root {
-  --color-primary: #00793d;
   --color-secondary: #4a6354;
   --color-background: #ffffff;
   --color-on-background: #1a1c19;
   --shape-corner-medium: 12px;
+
+  --accent: #00793d;
+  --accent-text: #ffffff;
 }
 
 * {
@@ -13,7 +15,7 @@
 body {
   margin: 0;
   font-family: 'Noto Serif JP', serif;
-  background: var(--color-background);
+  background-color: var(--color-background);
   color: var(--color-on-background);
   min-height: 100vh;
   display: flex;
@@ -23,8 +25,8 @@ body {
 }
 
 header {
-  background: var(--color-primary);
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--accent-text);
   padding: 1.5rem 1rem;
   font-weight: 700;
   font-size: clamp(1.8rem, 6vw, 2.2rem);
@@ -33,7 +35,7 @@ header {
 }
 
 main {
-  flex: 1;
+  flex-grow: 1;
   width: 100%;
   max-width: 900px;
   margin: 1.5rem auto;
@@ -55,9 +57,9 @@ textarea#textInput {
   min-height: 140px;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
-  border: 2px solid var(--color-primary);
+  border: 2px solid var(--accent);
   resize: vertical;
-  background: var(--color-background);
+  background-color: var(--color-background);
   color: var(--color-on-background);
   transition: 0.2s ease;
 }
@@ -69,14 +71,14 @@ textarea#textInput {
   line-height: 1.4;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
-  background: var(--color-background);
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 16px var(--color-primary);
+  background-color: var(--color-background);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;
   overflow-x: hidden;
-  color: #000;
+  color: var(--color-on-background);
   transition: 0.2s ease;
 }
 
@@ -86,6 +88,7 @@ textarea#textInput {
   gap: 1rem;
   justify-content: center;
   width: 100%;
+  margin-top: 0.5rem;
 }
 
 button {
@@ -98,25 +101,17 @@ button {
   transition: 0.2s ease;
 }
 
-.copy-button {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-.clear-button {
-  background: #8a6d1d;
-  color: #fff;
-}
-
+.copy-button,
+.clear-button,
 .reset-button {
-  background: var(--color-secondary);
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--accent-text);
 }
 
 #settings {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 1.5rem;
   justify-content: center;
   align-items: flex-start;
 }
@@ -126,28 +121,35 @@ button {
   flex-direction: column;
   align-items: center;
   min-width: 140px;
-  gap: 0.4rem;
+  flex: 1 1 160px;
 }
 
 .setting-item label {
   font-weight: 600;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
-.setting-item input,
-.setting-item select {
+.setting-item input[type="range"],
+.setting-item select,
+.setting-item input[type="color"] {
   width: 100%;
+}
+
+h2 {
+  width: 100%;
+  text-align: center;
 }
 
 footer#footer {
   text-align: center;
   font-size: 0.85rem;
   color: var(--color-secondary);
-  padding: 1.5rem 0 2rem;
+  padding: 1.5rem 0 2.5rem 0;
 }
 
 footer#footer a {
-  color: var(--color-primary);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -155,8 +157,26 @@ footer#footer a:hover {
   text-decoration: underline;
 }
 
-@supports (container-type: inline-size) {
+@media (max-width: 600px) {
+  main {
+    gap: 1.8rem;
+  }
+
   .setting-item {
-    container-type: inline-size;
+    min-width: 100%;
+  }
+
+  .button-row {
+    gap: 0.6rem;
+  }
+
+  button {
+    flex: 1 1 auto;
+  }
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  #displayArea {
+    box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 35%, transparent);
   }
 }
