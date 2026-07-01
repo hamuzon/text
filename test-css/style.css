@@ -6,7 +6,9 @@
   --shape-corner-medium: 12px;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -49,7 +51,7 @@ section {
 
 textarea#textInput {
   width: 100%;
-  font-size: clamp(1.5rem,5vw,2.5rem);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   min-height: 140px;
   padding: 1rem;
   border-radius: var(--shape-corner-medium);
@@ -62,7 +64,7 @@ textarea#textInput {
 
 #displayArea {
   width: 100%;
-  font-size: clamp(2rem,10vw,8rem);
+  font-size: clamp(2rem, 10vw, 8rem);
   font-weight: 600;
   line-height: 1.4;
   padding: 1rem;
@@ -97,41 +99,65 @@ button {
   transition: all 0.2s ease;
 }
 
-.copy-button { background-color: var(--color-primary); color: #fff; }
-.clear-button { background-color: #8a6d1d; color: #fff; }
-.reset-button { background-color: var(--color-secondary); color: #fff; }
+.copy-button {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.clear-button {
+  background-color: #8a6d1d;
+  color: #fff;
+}
+
+.reset-button {
+  background-color: var(--color-secondary);
+  color: #fff;
+}
 
 #settings {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .setting-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 140px;
+  justify-content: space-between;
+  min-width: 160px;
+  min-height: 110px;
+  padding: 0.5rem;
 }
 
 .setting-item label {
   font-weight: 600;
-  margin-bottom: 0.5rem;
   text-align: center;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
 }
 
-.setting-item input,
-.setting-item select {
+.setting-item input[type="range"],
+.setting-item select,
+.setting-item input[type="color"] {
   width: 100%;
+  margin: 0;
+}
+
+.setting-item output {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-top: 0.4rem;
 }
 
 footer#footer {
   text-align: center;
   font-size: 0.85rem;
   color: var(--color-secondary);
-  padding: 1.5rem 0 2.5rem 0;
+  padding: 1.5rem 0 2.5rem;
 }
 
 footer#footer a {
