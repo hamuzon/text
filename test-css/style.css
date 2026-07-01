@@ -60,6 +60,12 @@ textarea#textInput {
   background-color: var(--color-background);
   color: var(--color-on-background);
   transition: all 0.2s ease;
+  outline: none;
+}
+
+textarea#textInput:focus {
+  border-color: color-mix(in srgb, var(--color-primary) 60%, black);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 #displayArea {
@@ -74,10 +80,9 @@ textarea#textInput {
   box-shadow: 0 0 16px var(--color-primary);
   white-space: pre-wrap;
   word-break: break-word;
-  color: #000000;
-  overflow-wrap: break-word;
+  color: #000;
   overflow-x: hidden;
-  transition: all 0.2s ease;
+  overflow-wrap: break-word;
 }
 
 .button-row {
@@ -85,8 +90,7 @@ textarea#textInput {
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
-  width: 100%;
-  margin-top: 0.5rem;
+  transition: transform 0.2s ease;
 }
 
 button {
@@ -97,6 +101,10 @@ button {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
 }
 
 .copy-button {
@@ -149,7 +157,6 @@ button {
 .setting-item output {
   text-align: center;
   font-variant-numeric: tabular-nums;
-  line-height: 1;
   margin-top: 0.4rem;
 }
 
@@ -169,26 +176,18 @@ footer#footer a:hover {
   text-decoration: underline;
 }
 
-@supports (container-type: inline-size) {
-  .setting-item {
-    container-type: inline-size;
-  }
-
-  @container (min-width: 300px) {
-    .setting-item label {
-      font-size: 1.1rem;
-    }
-  }
-}
-
 @supports selector(:has(*)) {
-  .button-row:has(button:hover) {
-    transform: scale(1.02);
-    transition: 0.2s;
-  }
-
   body:has(textarea:focus) header {
     filter: brightness(1.1);
+  }
+
+  .button-row:has(button:hover) {
+    transform: scale(1.02);
+  }
+
+  section:has(textarea:focus) {
+    outline: 2px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+    border-radius: var(--shape-corner-medium);
   }
 }
 
@@ -203,7 +202,7 @@ footer#footer a:hover {
 }
 
 @supports (text-wrap: balance) {
-  #appTitle {
+  header {
     text-wrap: balance;
   }
 }
