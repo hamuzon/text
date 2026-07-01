@@ -41,7 +41,11 @@ main {
   gap: 2.5rem;
 }
 
-section { display: flex; flex-direction: column; gap: 1rem; }
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
 textarea#textInput {
   width: 100%;
@@ -118,9 +122,10 @@ button {
   text-align: center;
 }
 
-.setting-item input[type=range],
-.setting-item select,
-.setting-item input[type=color] { width: 100%; }
+.setting-item input,
+.setting-item select {
+  width: 100%;
+}
 
 footer#footer {
   text-align: center;
@@ -134,4 +139,51 @@ footer#footer a {
   text-decoration: none;
 }
 
-footer#footer a:hover { text-decoration: underline; }
+footer#footer a:hover {
+  text-decoration: underline;
+}
+
+@supports (container-type: inline-size) {
+  .setting-item {
+    container-type: inline-size;
+  }
+
+  @container (min-width: 300px) {
+    .setting-item label {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+@supports selector(:has(*)) {
+  .button-row:has(button:hover) {
+    transform: scale(1.02);
+    transition: 0.2s;
+  }
+
+  body:has(textarea:focus) header {
+    filter: brightness(1.1);
+  }
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  button {
+    background: color-mix(in srgb, var(--color-primary) 85%, white);
+  }
+
+  textarea#textInput {
+    border-color: color-mix(in srgb, var(--color-primary) 70%, black);
+  }
+}
+
+@supports (text-wrap: balance) {
+  #appTitle {
+    text-wrap: balance;
+  }
+}
+
+@supports (field-sizing: content) {
+  textarea#textInput {
+    field-sizing: content;
+  }
+}
