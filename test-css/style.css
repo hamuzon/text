@@ -24,7 +24,7 @@ body {
 
 header {
   background-color: var(--color-primary);
-  color: #fff;
+  color: #ffffff;
   padding: 1.5rem 1rem;
   font-weight: 700;
   font-size: clamp(1.8rem, 6vw, 2.2rem);
@@ -51,32 +51,33 @@ section {
 
 textarea#textInput {
   width: 100%;
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
   min-height: 140px;
   padding: 1rem;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   border-radius: var(--shape-corner-medium);
   border: 2px solid var(--color-primary);
-  resize: vertical;
   background-color: var(--color-background);
   color: var(--color-on-background);
+  resize: vertical;
+  transition: 0.2s ease;
   outline: none;
 }
 
 #displayArea {
   width: 100%;
+  padding: 1rem;
   font-size: clamp(2rem, 10vw, 8rem);
   font-weight: 600;
   line-height: 1.4;
-  padding: 1rem;
   border-radius: var(--shape-corner-medium);
-  background-color: var(--color-background);
   border: 2px solid var(--color-primary);
+  background-color: var(--color-background);
+  color: #000000;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.08);
   white-space: pre-wrap;
   word-break: break-word;
-  color: #000;
-  overflow-x: hidden;
   overflow-wrap: break-word;
+  overflow-x: hidden;
 }
 
 .button-row {
@@ -84,64 +85,67 @@ textarea#textInput {
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
+  width: 100%;
 }
 
 button {
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
+  font-weight: 600;
   border-radius: var(--shape-corner-medium);
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 .copy-button {
   background-color: var(--color-primary);
-  color: #fff;
+  color: #ffffff;
 }
 
 .clear-button {
   background-color: #8a6d1d;
-  color: #fff;
+  color: #ffffff;
 }
 
 .reset-button {
   background-color: var(--color-secondary);
-  color: #fff;
+  color: #ffffff;
 }
 
 #settings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1.5rem;
-  justify-items: center;
   align-items: start;
 }
 
 .setting-item {
-  width: 100%;
-  max-width: 220px;
-  min-height: 110px;
-  padding: 0.6rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  align-items: stretch;
 }
 
 .setting-item label {
-  text-align: center;
   font-weight: 600;
+  text-align: center;
   line-height: 1.2;
 }
 
-.setting-item input[type="range"],
-.setting-item select,
-.setting-item input[type="color"] {
+.setting-item input,
+.setting-item select {
   width: 100%;
 }
 
 .setting-item output {
   text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 footer#footer {
@@ -158,4 +162,36 @@ footer#footer a {
 
 footer#footer a:hover {
   text-decoration: underline;
+}
+
+@supports (container-type: inline-size) {
+  .setting-item {
+    container-type: inline-size;
+  }
+}
+
+@supports selector(:has(*)) {
+  body:has(textarea:focus) header {
+    filter: brightness(1.05);
+  }
+
+  .button-row:has(button:hover) {
+    transform: translateY(-1px);
+  }
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  textarea#textInput {
+    border-color: color-mix(in srgb, var(--color-primary) 70%, black);
+  }
+
+  button {
+    filter: saturate(1.05);
+  }
+}
+
+@supports (text-wrap: balance) {
+  header {
+    text-wrap: balance;
+  }
 }
